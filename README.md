@@ -39,15 +39,21 @@
 
 -Wednesday
   -Part 1
+  
 -Thursday
-  -
+  -Part 2
+  
 -Friday
-  -
+  -Part
+  
 -Saturday
-  -
+  -Part
+  
 -Sunday
-  -
+  -Part
+  
 -Monday
-  -
+  -Part
+  
 -Tuesday
-  -
+  -part
