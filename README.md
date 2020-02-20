@@ -4,8 +4,8 @@
 1.) Figure out how to simulate data (include every variable type and subtype)
 
 2.) Gain a conceptual understanding of the following statistical tools (and play with them in R):
-  a.) T-tests (one and two sample)
-  b.) Uni vs. multi variate ANOVO
+  - T-tests (one and two sample)
+  - Uni vs. multi variate ANOVO
   c.) Factor analysis
   d.) Structural equation modeling
   e.) Inter-rater reliability
@@ -14,8 +14,8 @@
   h.) "leave-one-out" analysis
   i.)Specificity scores
   j.) tests of homogeneity
-    I.) Q-tests
-    II.) Chi-squared tests
+    - Q-tests
+    - Chi-squared tests
     III.) I-squared
     IV.) Tau-squared
 
@@ -49,11 +49,11 @@
 ### Saturday
   -Part
   
-### -Sunday
+### Sunday
   -Part
   
-### -Monday
+### Monday
   -Part
   
-### -Tuesday
+### Tuesday
   -part
