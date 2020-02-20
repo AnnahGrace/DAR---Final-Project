@@ -4,16 +4,16 @@
 1.) Figure out how to simulate data (include every variable type and subtype)
 
 2.) Gain a conceptual understanding of the following statistical tools (and play with them in R):
-  * T-tests (one and two sample)
-  * Uni vs. multi variate ANOVO
-  c.) Factor analysis
-  d.) Structural equation modeling
-  e.) Inter-rater reliability
-  f.) Linear regressions and corrilation coefficents
-  g.) Hedge's g calculation and z-scores for standardized mean difference
-  h.) "leave-one-out" analysis
-  i.)Specificity scores
-  j.) tests of homogeneity
+  -a.) T-tests (one and two sample)
+  - Uni vs. multi variate ANOVO
+  - Factor analysis
+  - Structural equation modeling
+  - Inter-rater reliability
+  - Linear regressions and corrilation coefficents
+  - Hedge's g calculation and z-scores for standardized mean difference
+  -h.) "leave-one-out" analysis
+  -i.)Specificity scores
+  -j.) tests of homogeneity
     - Q-tests
     - Chi-squared tests
     III.) I-squared
