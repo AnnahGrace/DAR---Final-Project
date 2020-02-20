@@ -1,7 +1,7 @@
 # Goals
 
 
-1.) Figure out how to simulate data (include every variable type and subtype)
+1.) ~~Figure out how to simulate data (include every variable type and subtype)~~
 
 2.) Gain a conceptual understanding of the following statistical tools (and play with them in R):
   - a.) T-tests (one and two sample)
@@ -37,8 +37,8 @@
 # Time line
 
 
-### Wednesday
-  -Part 1
+### Wednesday ✓
+  -Part 1 ✓
   
 ### Thursday
   -Part 2, a-d
