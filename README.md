@@ -4,8 +4,8 @@
 1.) Figure out how to simulate data (include every variable type and subtype)
 
 2.) Gain a conceptual understanding of the following statistical tools (and play with them in R):
-  - T-tests (one and two sample)
-  - Uni vs. multi variate ANOVO
+  * T-tests (one and two sample)
+  * Uni vs. multi variate ANOVO
   c.) Factor analysis
   d.) Structural equation modeling
   e.) Inter-rater reliability
