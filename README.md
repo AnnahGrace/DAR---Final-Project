@@ -37,23 +37,23 @@
 # Time line
 
 
-### -Wednesday
+### Wednesday
   -Part 1
   
-### -Thursday
+### Thursday
   -Part 2
   
-## -Friday
+### Friday
   -Part
   
-## -Saturday
+### Saturday
   -Part
   
-## -Sunday
+### -Sunday
   -Part
   
-## -Monday
+### -Monday
   -Part
   
-## -Tuesday
+### -Tuesday
   -part
