@@ -47,8 +47,7 @@
   -Part 2, e-h
   
 ### Saturday
-  -Part 2, i-j
-  -part 3
+  -Part 2, i-j; part 3
   
 ### Sunday
   -Part 4, a-g
@@ -71,3 +70,4 @@ In order to keep on top of my deliveribles, I will:
   - Use proper file directory procedures (even though I hate it)
   - Push to GitHub.com after every sitting
   - If I get to part 5, take notes on everything I do so I don't get lost in the complexity
+  - Strike out sections in this read me as I complete them
