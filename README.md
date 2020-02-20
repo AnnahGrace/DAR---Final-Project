@@ -41,19 +41,33 @@
   -Part 1
   
 ### Thursday
-  -Part 2
+  -Part 2, a-d
   
 ### Friday
-  -Part
+  -Part 2, e-h
   
 ### Saturday
-  -Part
+  -Part 2, i-j
+  -part 3
   
 ### Sunday
-  -Part
+  -Part 4, a-g
   
 ### Monday
-  -Part
+  -Part 5
   
 ### Tuesday
-  -part
+  -Part 5
+
+
+
+# Statment of Standards
+
+
+In order to keep on top of my deliveribles, I will: 
+  - Annotate all code while writing it (something I should be doing already but I am not)
+  - Take (actually useable) notes while learning about the uses of statistical tests
+  - Make a running list of all sources I look at the moment I download it
+  - Use proper file directory procedures (even though I hate it)
+  - Push to GitHub.com after every sitting
+  - If I get to part 5, take notes on everything I do so I don't get lost in the complexity
