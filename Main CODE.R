@@ -490,7 +490,7 @@ rapid.n(100, 100, 10, 10.5) #92 sig
 
 #============================Playing with ANOVA=========================
 
-#------------------Try out basic ANOVA--------------------------------------
+#------------------Try out one way ANOVA--------------------------------------
 
 #create a data frame with groups a, b, and c where half of the values for each-
 #fall between 1 and 50, and half fall within 50 and 100
@@ -621,6 +621,24 @@ rapid.aov.r(1, 10, 2.5, 11.5, 4, 13) #46 sigs
 
 
 
+
+
+
+
+#------------------Try out two way ANOVA--------------------------------------
+
+#make a fake data set that is compaible with two way ANOVA
+dose <- rep(rep(c(1, 2, 3), each= 10), length= 90)
+condition <- rep(c("no sick", "sick", "extra sick"), each= 30)
+#lets do n= 10 per condition and dose 
+change.in.level.of.sick <- rnorm(90, 5, 2)
+sick.test <- data.frame(condition, dose, change.in.level.of.sick)
+
+#visualize data
+boxplot(change.in.level.of.sick ~ dose, data = sick.test)
+boxplot(change.in.level.of.sick ~ condition, data = sick.test)
+
+#visualize both level groups at one
 
 
 
