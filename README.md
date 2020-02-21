@@ -81,7 +81,7 @@ I cannot go through everything that I have listed above unless I do a very gener
   - ANOVA
   - Effect size (focus on Hedge's g calculation)
   - Forest plots
-  - If I have time left over, I will jump into factor analysis (because this sounds really cool)
+  - If I have time left over, I will jump into factor analysis (because this looks really cool)
   
 My new timeline is as follows:
   - Thursday
