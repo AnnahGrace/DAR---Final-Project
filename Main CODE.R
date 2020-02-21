@@ -10,6 +10,8 @@
   #d.) charecter - rep() and letter[]
   #e.) generating data sets
   #f.) repeatedly generate data sets - replicate()
+#3.) Playing with t-tests
+#4.) Playing with ANOVA
 
 
 #============================WD and File Storage=========================
@@ -227,3 +229,267 @@ str(simlist)
 
 #here is the fist sim
 simlist[[1]]
+
+
+#============================Playing with t-tests=========================
+
+#------------2 random samples with the same mean and variance-------------
+
+#Create two random samples with the same means and- 
+#variance
+a <- rnorm(10)
+b <- rnorm(10)
+
+#null: a and b are from the same population/their means are not significantly-
+#different
+#alt: a and b are not from the same population/their means are significantly-
+#different
+
+t.test(a, b)
+#t-score= -0.024
+#df= 13.456
+#p-value= 0.981
+
+#with a p-value of 0.98, we fail to reject the null
+
+
+#------------2 random samples with the same mean and variance-------------
+
+#create two random samples with different means and-
+#the same variance
+c <- rnorm(10, 10)
+d <- rnorm(10, 15)
+
+#hypothisies are the same as above
+
+t.test(c, d)
+#t= -11.919
+#df= 13.508
+#p-value= 1.505e-08
+
+#how close can I get before I get a lot of error?
+#I would guess larger than a 1 point difference (while variance is 1)
+c <- rnorm(10, 10)
+d <- rnorm(10, 13)
+t.test(c, d)
+
+c <- rnorm(10, 10)
+d <- rnorm(10, 12)
+t.test(c, d)
+
+c <- rnorm(10, 10)
+d <- rnorm(10, 11)
+t.test(c, d)
+summary(t.test(c, d))
+#Still recognizing a difference most times (run multiple times)
+
+#test how many times out of 100 we get a significant resault
+for (i in 1:100) {
+  c <- rnorm(10, 10)
+  d <- rnorm(10, 11)
+  guiness <- t.test(c, d)
+  print(guiness$p.value)
+}
+#I cannot for the life of me get R to give me
+
+#trying again
+p.guiness <- data.frame(NA)
+for (i in 1:100) {
+  c <- rnorm(10, 10)
+  d <- rnorm(10, 11)
+  guiness <- t.test(c, d)
+  print(guiness$p.value)
+  p.guiness[i, 1] <- guiness$p.value
+}
+#let the record reflect that this took me 2 hours
+#I spent a long time trying to learn how to use if/else and append()
+
+#check how many are significant
+sig <- p.guiness <= 0.05
+length(which(sig == TRUE))
+#NOTE: this spits out the number of cases wher the p-value is equal to or-
+#less than 0.05 (indicating significance)
+#In other words, it tells you how many cases out of 100 it reads as significant
+
+#double checking
+length(which(sig == FALSE))
+
+#so, it recognizes a significant difference in means about half of the time
+
+#let's try with some different difference in means
+p.guiness <- data.frame(NA)
+for (i in 1:100) {
+  c <- rnorm(10, 10)
+  d <- rnorm(10, 10)
+  guiness <- t.test(c, d)
+  print(guiness$p.value)
+  p.guiness[i, 1] <- guiness$p.value
+}
+
+sig <- p.guiness <= 0.05
+length(which(sig == TRUE))
+#reads a significant differnce about 5% of the time (as we would expect-
+#with a default CI of 95%)
+
+#lets change the CI a few times
+
+#CI= 90%
+p.guiness <- data.frame(NA)
+for (i in 1:100) {
+  c <- rnorm(10, 10)
+  d <- rnorm(10, 10)
+  guiness <- t.test(c, d, conf.level = 0.9 )
+  print(guiness$p.value)
+  p.guiness[i, 1] <- guiness$p.value
+}
+
+sig <- p.guiness <= 0.05
+length(which(sig == TRUE))
+
+#CI= 50%
+p.guiness <- data.frame(NA)
+for (i in 1:100) {
+  c <- rnorm(10, 10)
+  d <- rnorm(10, 10)
+  guiness <- t.test(c, d, conf.level = 0.5 )
+  print(guiness$p.value)
+  p.guiness[i, 1] <- guiness$p.value
+}
+
+sig <- p.guiness <= 0.05
+length(which(sig == TRUE))
+#why is this not changing the read of TRUE?
+
+#let's make a function for space efficency
+rapid <- function(mean1, mean2, CI){
+  p.guiness <- data.frame(NA)
+  for (i in 1:100) {
+    c <- rnorm(10, mean1)
+    d <- rnorm(10, mean2)
+    guiness <- t.test(c, d, conf.level = CI )
+    p.guiness[i, 1] <- guiness$p.value
+  }
+  sig <- p.guiness <= 0.05
+  print(length(which(sig == TRUE)))
+}
+
+#more testing
+rapid(10, 10, 0.5)
+#why is this not changing the read of TRUE?
+
+#testing what changing the CI does
+#change the CI repetedly to test)
+set.seed(1)
+c <- rnorm(10, 10)
+
+set.seed(2)
+d <- rnorm (10, 10)
+t.test(c, d, conf.level = 0.001)
+#Changing the CI does nothing to the p-value when the means are the same
+
+#testing with different means
+rapid(10, 12, 0.8)
+#changing the CI seems to have no effect here either
+
+#expand the above
+set.seed(1)
+c <- rnorm(10, 10)
+
+set.seed(2)
+d <- rnorm (10, 12)
+t.test(c, d, conf.level = 0.1)
+
+#lets look at the t-test formula to understand this (check online)
+#CI's have nothing to do with the formula...
+#I just realized that they only effect how you interpret your p-value
+#I kind of knew that but now I fully understand how arbitrary it is
+
+#lets make another fuction so we can play with SD
+rapid.SD <- function(mean1, mean2, SD1, SD2){
+  p.guiness <- data.frame(NA)
+  for (i in 1:100) {
+    c <- rnorm(10, mean1, SD1)
+    d <- rnorm(10, mean2, SD2)
+    guiness <- t.test(c, d)
+    p.guiness[i, 1] <- guiness$p.value
+  }
+  sig <- p.guiness <= 0.05
+  print(length(which(sig == TRUE)))
+}
+
+#lets play with SD
+rapid.SD(10, 10, 1, 15)  #5 sigs
+rapid.SD(10, 10, 1, 20)  #8 sigs
+rapid.SD(10, 10, 1, 100)  #5 sigs
+#very little effect
+
+#what about when our means are unequal
+rapid.SD(10, 12, 1, 15)  #8 sigs
+rapid.SD(10, 12, 1, 20)  #11 sigs
+rapid.SD(10, 12, 1, 100)  #5 sigs
+#still very little effect
+#upon looking at the formula again, I would expect SD to have a noticible- 
+#effect on significance only when my sample size is very large
+
+#lets test that theory
+rapid.SD(100, 100, 1, 1)  #8 sigs
+rapid.SD(100, 100, 1, 15)  #8 sigs
+rapid.SD(100, 100, 1, 20)  #4 sigs
+rapid.SD(100, 100, 1, 100)  #2 sigs
+rapid.SD(100, 100, 1, 200)  #2 sigs
+#This is still not having a very significant effect
+
+#Upon looking at the formula again, I feel like sample size and means are the-
+#only things that will have a large effect on how many sigificant resaults-
+#this thing pumps out
+
+#lets test that
+#function that alows me to choose my sample sizes and means
+rapid.n <- function(n1, n2, mean1, mean2){
+  p.guiness <- data.frame(NA)
+  for (i in 1:100) {
+    c <- rnorm(n1, mean1)
+    d <- rnorm(n2, mean2)
+    guiness <- t.test(c, d)
+    p.guiness[i, 1] <- guiness$p.value
+  }
+  sig <- p.guiness <= 0.05
+  print(length(which(sig == TRUE)))
+}
+
+#comense experimentation
+rapid.n(10, 10, 10, 10) #10 sig
+rapid.n(100, 100, 10, 10) #1 sig
+#these are false possitives
+
+rapid.n(10, 10, 10, 11) #61 sig
+rapid.n(100, 100, 10, 11) #100 sig
+
+rapid.n(10, 10, 10, 12) #99 sig
+rapid.n(100, 100, 10, 12) #100 sig
+
+rapid.n(10, 10, 10, 10.1) #9 sig
+rapid.n(100, 100, 10, 10.1) #11 sig
+
+rapid.n(10, 10, 10, 10.2) #9 sig
+rapid.n(100, 100, 10, 10.2) #28 sig
+
+rapid.n(10, 10, 10, 10.3) #12 sig
+rapid.n(100, 100, 10, 10.3) #57 sig
+
+rapid.n(10, 10, 10, 10.4) #14 sig
+rapid.n(100, 100, 10, 10.4) #74 sig
+
+rapid.n(10, 10, 10, 10.5) #26 sig
+rapid.n(100, 100, 10, 10.5) #92 sig
+
+#well that is pretty cool
+
+
+
+
+
+
+
+
+
