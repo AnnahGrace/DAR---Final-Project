@@ -4,7 +4,7 @@
 ~~1.) Figure out how to simulate data (include every variable type and subtype)~~
 
 2.) Gain a conceptual understanding of the following statistical tools (and play with them in R):
-  - ~~a.) T-tests (one and two sample)~~
+  - a.) T-tests (one and two sample)
   - b.) Uni vs. multi variate ANOVO
   - c.) Factor analysis
   - d.) Structural equation modeling
@@ -71,3 +71,32 @@ In order to keep on top of my deliveribles, I will:
   - Push to GitHub.com after every sitting
   - If I get to part 5, take notes on everything I do so I don't get lost in the complexity
   - Strike out sections in this read me as I complete them
+
+
+
+# Change of Plans
+
+I cannot go through everything that I have listed above unless I do a very general overveiw so I am instead going to focus on learning how to use the following in depth:
+  - t-tests
+  - ANOVA
+  - Effect size (focus on Hedge's g, Cohen's d, and r^2)
+  - Forest plots
+  - If I have time left over, I will jump into factor analysis (because this looks really cool)
+  
+My new timeline is as follows:
+  - Thursday
+    - t-tests
+    - ANOVA
+  - Friday
+    - More ANOVA
+    - Effect size
+  - Saturday
+    - More effect size
+    - Forest plots
+  - Sunday
+    - More forest plots
+    - Prepare talk for in class
+  - Monday
+    - Factor analysis
+  - Tuesday
+    - More factor analysis
