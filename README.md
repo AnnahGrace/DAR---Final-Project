@@ -79,7 +79,7 @@ In order to keep on top of my deliveribles, I will:
 I cannot go through everything that I have listed above unless I do a very general overveiw so I am instead going to focus on learning how to use the following in depth:
   - t-tests
   - ANOVA
-  - Effect size (focus on Hedge's g calculation)
+  - Effect size (focus on Hedge's g and Cohen's d calculations)
   - Forest plots
   - If I have time left over, I will jump into factor analysis (because this looks really cool)
   
