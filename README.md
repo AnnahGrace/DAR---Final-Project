@@ -82,3 +82,21 @@ I cannot go through everything that I have listed above unless I do a very gener
   -Effect size (focus on Hedge's g calculation)
   -Forest plots
   -If I have time left over, I will jump into factor analysis (because this sounds really cool)
+  
+My new timeline is as follows:
+  -Thursday
+    -t-tests
+    -ANOVA
+  -Friday
+    -More ANOVA
+    -Effect size
+  -Saturday
+    -More effect size
+    -Forest plots
+  -Sunday
+    -More forest plots
+    -Prepare talk for in class
+  -Monday
+    -Factor analysis
+  -Tuesday
+    -More factor analysis
