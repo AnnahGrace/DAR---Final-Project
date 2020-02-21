@@ -484,6 +484,137 @@ rapid.n(10, 10, 10, 10.5) #26 sig
 rapid.n(100, 100, 10, 10.5) #92 sig
 
 #well that is pretty cool
+#This shows that t-tests can detect smaller effect sizes with confidencewhen n-
+#is larger
+
+
+#============================Playing with ANOVA=========================
+
+#------------------Try out basic ANOVA--------------------------------------
+
+#create a data frame with groups a, b, and c where half of the values for each-
+#fall between 1 and 50, and half fall within 50 and 100
+groups <- rep(letters[1:3], length= 10)
+e<- runif(15, 1, 50)
+f<- runif(15, 50, 100)
+
+#null: groups do not have the same mean
+#alt: groups have the same mean
+
+
+aov <- data.frame(groups, c(e, f))
+names(aov)[2]<-paste("numbers")
+levels(aov$groups)
+
+#visualize data
+boxplot(numbers ~ groups, data = aov)
+
+#compute an ANOVA
+res.aov <- aov(numbers ~ groups, data = aov)
+summary(res.aov)
+
+#let's make a function thats stips out a count of how many resaults out of 100-
+#trials have a significant p-value
+rapid.aov <- function(min1, max1, min2, max2){
+  p.aov <- data.frame(matrix(NA, ncol=1, nrow=30))
+  names(p.aov)[1]<-paste("f-value")
+  groups <- rep(letters[1:3], length= 10)
+  for (i in 1:100) {
+    e<- runif(15, min1, max1)
+    f<- runif(15, min2, max2)
+    aov <- data.frame(groups, c(e, f))
+    names(aov)[2]<-paste("numbers")
+    res.aov <- aov(numbers ~ groups, data = aov)
+    p.aov[i, 1:2] <- summary(res.aov)[[1]][["Pr(>F)"]]
+  }
+  sig <- p.aov <= 0.05
+  print(length(which(sig == TRUE)))
+}
+
+#how many sigs will I get in a one-way ANOVA where half of the values for each-
+#falls between 1 and 50, and half fall within 50 and 100?
+rapid.aov(1, 50, 50, 100) #7 sigs
+
+#lets play with range size
+rapid.aov(1, 500, 1, 500) #7 sigs
+rapid.aov(1, 50, 1, 50) #6 sigs
+rapid.aov(1, 10, 1, 10) #3 sigs
+rapid.aov(1, 5, 1, 5) #3 sigs
+#when range1 (min1-max1) and range 2 (min2-max2) are the same, it reads-
+#significance a mean of about 5 time out of 100 trials (what we would expect-
+#with a 95% CI)
+
+#lets play with different ranges
+rapid.aov(1, 5, 5, 10) #0 sigs
+rapid.aov(1, 5, 10, 15) #0 sigs
+rapid.aov(1, 10, 1, 20) #1 sigs
+rapid.aov(1, 10, 15, 35) #0 sigs
+rapid.aov(400, 500, 500, 600) #0 sigs
+#this is reading as no significant differnce... lets look at the data-
+#tto figure out why
+rapid.aov.box <- function(min1, max1, min2, max2){
+  p.aov <- data.frame(matrix(NA, ncol=1, nrow=30))
+  names(p.aov)[1]<-paste("f-value")
+  groups <- rep(letters[1:3], length= 10)
+  for (i in 1:100) {
+    e<- runif(15, min1, max1)
+    f<- runif(15, min2, max2)
+    aov <- data.frame(groups, c(e, f))
+    names(aov)[2]<-paste("numbers")
+    res.aov <- aov(numbers ~ groups, data = aov)
+    p.aov[i, 1:2] <- summary(res.aov)[[1]][["Pr(>F)"]]
+    #add boxplot
+    boxplot(numbers ~ groups, data = aov)
+  }
+  sig <- p.aov <= 0.05
+  print(length(which(sig == TRUE)))
+}
+rapid.aov.box(400, 500, 500, 600) #5 sigs
+#this is not having an effect because the numbers being pulled from each range-
+#are being spread to each group evenly
+
+#lest change that
+rapid.aov.r <- function(min1, max1, min2, max2, min3, max3){
+  p.aov <- data.frame(matrix(NA, ncol=1, nrow=30))
+  names(p.aov)[1]<-paste("f-value")
+  #now the letters print one at a time, 10 times
+  groups <- rep(letters[1:3], each= 10)
+  for (i in 1:100) {
+    #add a third range so that I can control the range assigned to each group
+    e<- runif(10, min1, max1)
+    f<- runif(10, min2, max2)
+    g<- runif(10, min3, max3)
+    aov <- data.frame(groups, c(e, f, g))
+    names(aov)[2]<-paste("numbers")
+    res.aov <- aov(numbers ~ groups, data = aov)
+    p.aov[i, 1:2] <- summary(res.aov)[[1]][["Pr(>F)"]]
+  }
+  sig <- p.aov <= 0.05
+  print(length(which(sig == TRUE)))
+}
+
+#If I give it differnt ranges, I should get many sig counts
+#let's try it
+rapid.aov.r(1, 10, 20, 30, 40, 50) #100 sigs
+
+#How close can I get before it starts making errors?
+rapid.aov.r(1, 10, 10, 20, 20, 30) #100 sigs
+rapid.aov.r(1, 10, 9, 19, 18, 28) #100 sigs
+rapid.aov.r(1, 10, 5, 15, 10, 20) #100 sigs
+#the medians here ^ are 5, 10, and 15
+
+rapid.aov.r(1, 10, 2, 11, 3, 12) #28 sigs
+#the medians here ^ are 5, 6, and 7
+
+rapid.aov.r(1, 10, 3, 12, 5, 14) #87 sigs
+#the medians here ^ are 5, 7, and 9
+
+rapid.aov.r(1, 10, 2.5, 11.5, 4, 13) #46 sigs
+#the medians here ^ are 5, 6.5, and 8
+
+#so this can detect an effect size/difference of means of about 2 with-
+#reasonible accuracy when n=100
+
 
 
 
