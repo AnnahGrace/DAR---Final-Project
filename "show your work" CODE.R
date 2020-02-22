@@ -958,6 +958,115 @@ rapid.2.aov.r.testing.2(10, 5)
 #So, even though I have different numbers, it is giving me the exact same-
 #box plots
 
+#trying somthing else
+rapid.2.aov.r.testing <- function(mean, variance){
+  p.aov.2 <- data.frame(matrix(NA, ncol=3, nrow=100))
+  names(p.aov.2)[1]<-paste("p-value dose")
+  names(p.aov.2)[2]<-paste("p-value condition")
+  dose <- rep(rep(c(1, 2, 3), each= 10), length= 90)
+  condition <- rep(c("no sick", "sick", "extra sick"), each= 30)
+  for (i in 1:100) {
+    change.in.level.of.sick <- rnorm(90, mean, variance)
+    print(change.in.level.of.sick)
+    aov <- data.frame(change.in.level.of.sick, condition, dose)
+    res.aov <- aov(change.in.level.of.sick ~ dose + condition, data = sick.test)
+    p.aov.2[i, 1:3] <- summary(res.aov)[[1]][["Pr(>F)"]]
+    print(summary(res.aov)[[1]][["Pr(>F)"]])
+  }
+}
 
+rapid.2.aov.r.testing(10, 2)
+#the issue is that my one cahnge in level of sickness spans the entire length-
+#of the data frame
+
+#Lets change that
+rapid.2.aov.w <- function(m1, m2, m3, sd1, sd2, sd3){
+  p.aov.2 <- data.frame(matrix(NA, ncol=3, nrow=100))
+  names(p.aov.2)[1]<-paste("p-value dose")
+  names(p.aov.2)[2]<-paste("p-value condition")
+  dose <- rep(rep(c(1, 2, 3), each= 10), length= 90)
+  condition <- rep(c("no sick", "sick", "extra sick"), each= 30)
+  for (i in 1:100) {
+    change.in.level.of.sick1 <- rnorm(30, m1, sd1)
+    change.in.level.of.sick2 <- rnorm(30, m2, sd2)
+    change.in.level.of.sick3 <- rnorm(30, m3, sd3)
+    aov <- data.frame(c(change.in.level.of.sick1, change.in.level.of.sick2,
+                        change.in.level.of.sick3), condition, dose)
+    res.aov <- aov(change.in.level.of.sick ~ dose + condition, data = sick.test)
+    p.aov.2[i, 1:3] <- summary(res.aov)[[1]][["Pr(>F)"]]
+  }
+  sig <- p.aov.2[, 1] <= 0.05
+  sig2 <- p.aov.2[, 2] <= 0.05
+  print(length(which(sig == TRUE)))
+  print(length(which(sig2 == TRUE)))
+}
+
+#testing
+rapid.2.aov.working(1, 10, 100, 2, 2, 2)
+#still not working
+
+#let's print againrapid.2.aov.working <- function(m1, m2, m3, sd1, sd2, sd3){
+rapid.2.aov.w <- function(m1, m2, m3, sd1, sd2, sd3){
+  p.aov.2 <- data.frame(matrix(NA, ncol=3, nrow=100))
+  names(p.aov.2)[1]<-paste("p-value dose")
+  names(p.aov.2)[2]<-paste("p-value condition")
+  dose <- rep(rep(c(1, 2, 3), each= 10), length= 90)
+  condition <- rep(c("no sick", "sick", "extra sick"), each= 30)
+  for (i in 1:100) {
+    change.in.level.of.sick1 <- rnorm(30, m1, sd1)
+    change.in.level.of.sick2 <- rnorm(30, m2, sd2)
+    change.in.level.of.sick3 <- rnorm(30, m3, sd3)
+    aov <- data.frame(c(change.in.level.of.sick1, change.in.level.of.sick2,
+                        change.in.level.of.sick3), condition, dose)
+    print(aov[, 1])
+    res.aov <- aov(change.in.level.of.sick ~ dose + condition, data = sick.test)
+    p.aov.2[i, 1:3] <- summary(res.aov)[[1]][["Pr(>F)"]]
+    print(summary(res.aov)[[1]][["Pr(>F)"]])
+  }
+  sig <- p.aov.2[, 1] <= 0.05
+  sig2 <- p.aov.2[, 2] <= 0.05
+  print(length(which(sig == TRUE)))
+  print(length(which(sig2 == TRUE)))
+}
+
+rapid.2.aov.w(1, 10, 100, 2, 2, 2)
+#so even when the difference in means is there, I see no significance
+
+#let's give a mean difference to every dose of every condition
+rapid.2.aov.x <- function(m1, m2, m3, m4, m5, m6, m7, m8, m9){
+  p.aov.2 <- data.frame(matrix(NA, ncol=3, nrow=100))
+  names(p.aov.2)[1]<-paste("p-value dose")
+  names(p.aov.2)[2]<-paste("p-value condition")
+  dose <- rep(rep(c(1, 2, 3), each= 10), length= 90)
+  condition <- rep(c("no sick", "sick", "extra sick"), each= 30)
+  for (i in 1:100) {
+    change.in.level.of.sick1 <- rnorm(10, m1, 2)
+    change.in.level.of.sick2 <- rnorm(10, m2, 2)
+    change.in.level.of.sick3 <- rnorm(10, m3, 2)
+    change.in.level.of.sick4 <- rnorm(10, m4, 2)
+    change.in.level.of.sick5 <- rnorm(10, m5, 2)
+    change.in.level.of.sick6 <- rnorm(10, m6, 2)
+    change.in.level.of.sick7 <- rnorm(10, m7, 2)
+    change.in.level.of.sick8 <- rnorm(10, m8, 2)
+    change.in.level.of.sick9 <- rnorm(10, m9, 2)
+    aov <- data.frame(c(change.in.level.of.sick1, change.in.level.of.sick2,
+                        change.in.level.of.sick3, change.in.level.of.sick4,
+                        change.in.level.of.sick5, change.in.level.of.sick6,
+                        change.in.level.of.sick7, change.in.level.of.sick8,
+                        change.in.level.of.sick9), 
+                      condition, dose)
+    print(aov[, 1])
+    res.aov <- aov(change.in.level.of.sick ~ dose + condition, data = sick.test)
+    p.aov.2[i, 1:3] <- summary(res.aov)[[1]][["Pr(>F)"]]
+    print(summary(res.aov)[[1]][["Pr(>F)"]])
+  }
+  sig <- p.aov.2[, 1] <= 0.05
+  sig2 <- p.aov.2[, 2] <= 0.05
+  print(length(which(sig == TRUE)))
+  print(length(which(sig2 == TRUE)))
+}
+
+rapid.2.aov.x(10, 20, 30, 40, 50, 60, 70, 80, 90)
+#WTF!!!
 
 

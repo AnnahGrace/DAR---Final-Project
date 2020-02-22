@@ -4,12 +4,12 @@
 
 #1.) Working Directory and File Storage
 #2.) Data Simulation
-#a.) numeric continuous - rnorm()
-#b.) numeric continuous - runif()
-#c.) numeric discrete - rpois()
-#d.) charecter - rep() and letter[]
-#e.) generating data sets
-#f.) repeatedly generate data sets - replicate()
+  #a.) numeric continuous - rnorm()
+  #b.) numeric continuous - runif()
+  #c.) numeric discrete - rpois()
+  #d.) charecter - rep() and letter[]
+  #e.) generating data sets
+  #f.) repeatedly generate data sets - replicate()
 #3.) Playing with t-tests
 #4.) Playing with ANOVA
 
