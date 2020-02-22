@@ -3,7 +3,7 @@
 I cannot go through everything that I have listed below unless I do a very general overveiw so I am instead going to focus on learning how to use the following in depth:
   - ~~t-tests~~
   - ~~ANOVA~~
-  - Effect size (focus on Hedge's g, Cohen's d, and r^2)
+  - Effect size (focus on Hedge's g and Cohen's d)
   - Forest plots
   - If I have time left over, I will jump into factor analysis (because this looks really cool)
   
