@@ -233,7 +233,7 @@ simlist[[1]]
 
 #============================Playing with t-tests=========================
 
-#------------2 random samples with the same mean and variance-------------
+#------------2 random samples with the same mean and SD-------------
 
 #Create two random samples with the same means and- 
 #variance
@@ -253,15 +253,15 @@ t.test(a, b)
 #with a p-value of 0.98, we fail to reject the null
 
 
-#------------2 random samples with the same mean and variance-------------
+#------------2 random samples with the same mean and SD-------------
 
 #create two random samples with different means and-
-#the same variance
+#the same SD
 c <- rnorm(10, 10)
 d <- rnorm(10, 15)
 
 #hypothisies are the same as above
-
+?rnorm
 t.test(c, d)
 #t= -11.919
 #df= 13.508
@@ -513,7 +513,7 @@ boxplot(numbers ~ groups, data = aov)
 res.aov <- aov(numbers ~ groups, data = aov)
 summary(res.aov)
 
-#let's make a function thats stips out a count of how many resaults out of 100-
+#let's make a function thats spits out a count of how many resaults out of 100-
 #trials have a significant p-value
 rapid.aov <- function(min1, max1, min2, max2){
   p.aov <- data.frame(matrix(NA, ncol=1, nrow=30))
@@ -613,8 +613,145 @@ rapid.aov.r(1, 10, 2.5, 11.5, 4, 13) #46 sigs
 #the medians here ^ are 5, 6.5, and 8
 
 #so this can detect an effect size/difference of means of about 2 with-
-#reasonible accuracy when n=100
+#reasonible accuracy when n=10
 
+#let now use normally distributed data
+rapid.aov.norm <- function(n1, n2, n3, mu1, mu2, mu3, sd1, sd2, sd3){
+  p.aov <- data.frame(matrix(NA, ncol=2, nrow=100))
+  names(p.aov)[1]<-paste("p-value")
+  #now the letters print one at a time, 10 times
+  groups <- rep(letters[1:3], each= 10)
+  for (i in 1:100) {
+    #add a third range so that I can control the range assigned to each group
+    e<- rnorm(n1, mu1, sd1)
+    f<- rnorm(n2, mu2, sd2)
+    g<- rnorm(n3, mu3, sd3)
+    aov <- data.frame(groups, c(e, f, g))
+    names(aov)[2]<-paste("numbers")
+    res.aov <- aov(numbers ~ groups, data = aov)
+    p.aov[i, 1:2] <- summary(res.aov)[[1]][["Pr(>F)"]]
+  }
+  sig <- p.aov <= 0.05
+  print(length(which(sig == TRUE)))
+}
+
+#how big does the mean differnce have to be for R to reliably detect it?
+#let's start with n= 10 and SD= 2
+rapid.aov.norm(10, 10, 10, 5, 10, 15, 2, 2, 2) # 100 sigs
+rapid.aov.norm(10, 10, 10, 5, 7, 9, 2, 2, 2) # 99 sigs
+rapid.aov.norm(10, 10, 10, 5, 6, 7, 2, 2, 2) # 47 sigs
+rapid.aov.norm(10, 10, 10, 5, 6.5, 8, 2, 2, 2) # 81 sigs
+#again, it looks like a mean difference of two is the minimum when n= 10
+
+#lets trty with SD=1
+rapid.aov.norm(10, 10, 10, 5, 10, 15, 1, 1, 1) # 100 sigs
+rapid.aov.norm(10, 10, 10, 5, 7, 9, 1, 1, 1) # 100 sigs
+rapid.aov.norm(10, 10, 10, 5, 6, 7, 1, 1, 1) # 99 sigs
+rapid.aov.norm(10, 10, 10, 5, 5.5, 6, 1, 1, 1) # 53 sigs
+#and when SD is one, it can detect a mean difference of 1
+
+#what if we increase sample size?
+rapid.aov.norm(100, 100, 100, 5, 10, 15, 2, 2, 2) # 2 sigs
+rapid.aov.norm(100, 100, 100, 5, 7, 9, 2, 2, 2) # 3 sigs
+rapid.aov.norm(100, 100, 100, 5, 6, 7, 2, 2, 2) # 9 sigs
+rapid.aov.norm(100, 100, 100, 5, 6.5, 8, 2, 2, 2) # 5 sigs
+#hmmmmm
+
+#lets change the difference of meas
+rapid.aov.norm(100, 100, 100, 1, 100, 200, 2, 2, 2) # 0 sigs
+rapid.aov.norm(100, 100, 100, 1, 50, 100, 2, 2, 2) # 0 sigs
+rapid.aov.norm(100, 100, 100, 1, 25, 50, 2, 2, 2) # 0 sigs
+rapid.aov.norm(100, 100, 100, 1, 10, 20, 2, 2, 2) # 0 sigs
+#that is really weird
+
+#lets make the functtion print use the numbers
+rapid.aov.wtf <- function(n1, n2, n3, mu1, mu2, mu3, sd1, sd2, sd3){
+  p.aov <- data.frame(matrix(NA, ncol=2, nrow=100))
+  names(p.aov)[1]<-paste("p-value")
+  groups <- rep(letters[1:3], each= 10)
+  for (i in 1:100) {
+    e<- rnorm(n1, mu1, sd1)
+    f<- rnorm(n2, mu2, sd2)
+    g<- rnorm(n3, mu3, sd3)
+    aov <- data.frame(groups, c(e, f, g))
+    names(aov)[2]<-paste("numbers")
+    res.aov <- aov(numbers ~ groups, data = aov)
+    p.aov[i, 1:2] <- summary(res.aov)[[1]][["Pr(>F)"]]
+    #print the first few generated numbers
+    print((aov))
+    #print p values
+    print(summary(res.aov)[[1]][["Pr(>F)"]])
+  }
+  sig <- p.aov <= 0.05
+  print(length(which(sig == TRUE)))
+}
+
+rapid.aov.wtf(100, 100, 100, 1, 100, 200, 2, 2, 2)
+#okay, so this is happening because I have it set up to print 30 letters but-
+#300 numbers...
+
+#Let's adjust the code
+rapid.aov.ndep <- function(n, mu1, mu2, mu3, sd){
+  p.aov <- data.frame(matrix(NA, ncol=2, nrow=100))
+  names(p.aov)[1]<-paste("p-value")
+  groups <- rep(letters[1:3], each= n)
+  for (i in 1:100) {
+    e<- rnorm(n, mu1, sd)
+    f<- rnorm(n, mu2, sd)
+    g<- rnorm(n, mu3, sd)
+    aov <- data.frame(groups, c(e, f, g))
+    names(aov)[2]<-paste("numbers")
+    res.aov <- aov(numbers ~ groups, data = aov)
+    p.aov[i, 1:2] <- summary(res.aov)[[1]][["Pr(>F)"]]
+  }
+  sig <- p.aov <= 0.05
+  print(length(which(sig == TRUE)))
+}
+
+rapid.aov.ndep(10, 1, 10, 20, 2) # 100 sigs
+
+#How close can my means get before R starts to get many errors?
+rapid.aov.ndep(10, 1, 5, 9, 2) # 100 sigs
+rapid.aov.ndep(10, 1, 4, 7, 2) # 100 sigs
+rapid.aov.ndep(10, 1, 3, 5, 2) # 98 sigs
+rapid.aov.ndep(10, 1, 2, 3, 2) # 40 sigs
+#when SD= 2, it is again about 2
+
+#let's test with SD= 1
+rapid.aov.ndep(10, 1, 4, 7, 1) # 100 sigs
+rapid.aov.ndep(10, 1, 3, 5, 1) # 100 sigs
+rapid.aov.ndep(10, 1, 2, 3, 1) # 96 sigs
+rapid.aov.ndep(10, 1, 1.5, 2, 1) # 40 sigs
+#and when SD=1, it is about 1
+
+#what about when we up the n?
+rapid.aov.ndep(100, 1, 4, 7, 1) # 100 sigs
+rapid.aov.ndep(100, 1, 3, 5, 1) # 100 sigs
+rapid.aov.ndep(100, 1, 2, 3, 1) # 100 sigs
+rapid.aov.ndep(100, 1, 1.5, 2, 1) # 100 sigs
+rapid.aov.ndep(100, 1, 1.4, 1.8, 1) # 100 sigs
+rapid.aov.ndep(100, 1, 1.3, 1.6, 1) # 98 sigs
+rapid.aov.ndep(100, 1, 1.2, 1.4, 1) # 74 sigs
+rapid.aov.ndep(100, 1, 1.1, 1.2, 1) # 20 sigs
+#it looks like when your n increases by one order of magnitude, your percision- 
+#in detecting a differnce of means also increases by one order of magnitude
+#A little bit less, actually (0.2 is more reliable that 0.1)
+
+#test with 1000
+rapid.aov.ndep(1000, 1, 1.09, 1.18, 1) # 97 sigs
+rapid.aov.ndep(1000, 1, 1.08, 1.16, 1) # 86 sigs
+rapid.aov.ndep(1000, 1, 1.07, 1.14, 1) # 78 sigs
+rapid.aov.ndep(1000, 1, 1.06, 1.12, 1) # 63 sigs
+rapid.aov.ndep(1000, 1, 1.05, 1.1, 1) # 46 sigs
+rapid.aov.ndep(1000, 1, 1.04, 1.08, 1) # 35 sigs
+rapid.aov.ndep(1000, 1, 1.03, 1.06, 1) # 16 sigs
+rapid.aov.ndep(1000, 1, 1.02, 1.04, 1) # 8 sigs
+rapid.aov.ndep(1000, 1, 1.01, 1.02, 1) # 8 sigs
+#nevermind, it is definatly not a linear increase
+#my phisics roomate and I discussed and we think it is logarithmic, which is-
+#very facinating
+
+#stop
 
 #------------------Try out two way ANOVA--------------------------------------
 
