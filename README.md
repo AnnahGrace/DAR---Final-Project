@@ -2,7 +2,7 @@
 
 I cannot go through everything that I have listed below unless I do a very general overveiw so I am instead going to focus on learning how to use the following in depth:
   - ~~t-tests~~
-  - ANOVA
+  - ~~ANOVA~~
   - Effect size (focus on Hedge's g, Cohen's d, and r^2)
   - Forest plots
   - If I have time left over, I will jump into factor analysis (because this looks really cool)
@@ -26,7 +26,7 @@ My new timeline is as follows:
     - More factor analysis
 
 ### NOTE
-Main CODE is the condenced version of "show your work" CODE. I have not data sets. No other files on this repo are relevent. I cannot figure out how to get the figure save thing to work... as you will see
+Main CODE is the condenced version of "show your work" CODE. I have no data sets for you to access. No other files on this repo are relevent. I cannot figure out how to get the figure save thing to work... as you will see
 
 
 # See previous plan below
