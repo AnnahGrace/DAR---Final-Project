@@ -4,12 +4,12 @@
 
 #1.) Working Directory and File Storage
 #2.) Data Simulation
-#a.) numeric continuous - rnorm()
-#b.) numeric continuous - runif()
-#c.) numeric discrete - rpois()
-#d.) charecter - rep() and letter[]
-#e.) generating data sets
-#f.) repeatedly generate data sets - replicate()
+  #a.) numeric continuous - rnorm()
+  #b.) numeric continuous - runif()
+  #c.) numeric discrete - rpois()
+  #d.) charecter - rep() and letter[]
+  #e.) generating data sets
+  #f.) repeatedly generate data sets - replicate()
 #3.) Playing with t-tests
 #4.) Playing with ANOVA
 
@@ -51,7 +51,15 @@ rnorm(5, mean= 50, sd= 5)
 #example with 2 seeds
 set.seed(16)
 rnorm(5)
-#Highlight and repeatidly enter to get the same numbers
+
+set.seed(7)
+rnorm(5)
+
+set.seed(16)
+rnorm(5)
+
+set.seed(7)
+rnorm(5)
 
 #pull numbers from 3 distribution with different means (and place in 1 vector)
 rnorm(n= 10, mean= c(0, 5, 20), sd= 1)
@@ -195,11 +203,11 @@ data.frame(group = rep(LETTERS[3:4], each= 10),
 
 #repetedly generate data sets
 #replicate(n, expr, simplify)
-#n= number of replications
-#expr= the expression to repeat
-#simplify= controls the type of output the resaults of expr are saved into
-#simplify= FALSE saves output into a list rather than a matrix
-#if you do not specify simplify, you will get a matrix
+  #n= number of replications
+  #expr= the expression to repeat
+  #simplify= controls the type of output the resaults of expr are saved into
+    #simplify= FALSE saves output into a list rather than an array
+    #if you do not specify simplify, you will get a matrix
 
 #simple example with list output (generate randon, normal values)
 replicate(3, 
@@ -212,17 +220,15 @@ replicate(3, expr= rnorm(5, mean= 0, sd= 1))
 
 #example with list output (with a numeric and a catagorical variable)
 simlist <- replicate(3, 
-                     expr= data.frame(group = rep(letters[1:2], each = 3),
+                    expr= data.frame(group = rep(letters[1:2], each = 3),
                                       response= rnorm(6, mean= 0, sd= 1) ),
-                     simplify= FALSE)
+                    simplify= FALSE)
 
 simlist
 str(simlist)
 
 #here is the fist sim
 simlist[[1]]
-#there are three of these
-#they each have 6 entries because 1:2 each= 3 mean 2x3 which =6
 
 
 #============================Playing with t-tests=========================
@@ -244,9 +250,6 @@ t.test(a, b)
 #df= 13.456
 #p-value= 0.981
 
-#note that I am not using seed() (anywhere in this code) so you will get-
-#different numbers from me and that is okay because that is the point
-
 #with a p-value of 0.98, we fail to reject the null
 
 
@@ -258,12 +261,11 @@ c <- rnorm(10, 10)
 d <- rnorm(10, 15)
 
 #hypothisies are the same as above
-
+?rnorm
 t.test(c, d)
 #t= -11.919
 #df= 13.508
 #p-value= 1.505e-08
-#with this p-value, we can reject the null
 
 #how close can I get before I get a lot of error?
 #I would guess larger than a 1 point difference (while variance is 1)
@@ -278,19 +280,25 @@ t.test(c, d)
 c <- rnorm(10, 10)
 d <- rnorm(10, 11)
 t.test(c, d)
+summary(t.test(c, d))
 #Still recognizing a difference most times (run multiple times)
 
 #test how many times out of 100 we get a significant resault
-p.guiness <- data.frame(NA)
-#loop 100 times so that I get a different set of values for c and c each time
 for (i in 1:100) {
   c <- rnorm(10, 10)
   d <- rnorm(10, 11)
-  #run a t-test and give it a name
   guiness <- t.test(c, d)
-  #print the p-values from the guiness list 
   print(guiness$p.value)
-  #jab the p-values into a list
+}
+#I cannot for the life of me get R to give me
+
+#trying again
+p.guiness <- data.frame(NA)
+for (i in 1:100) {
+  c <- rnorm(10, 10)
+  d <- rnorm(10, 11)
+  guiness <- t.test(c, d)
+  print(guiness$p.value)
   p.guiness[i, 1] <- guiness$p.value
 }
 #let the record reflect that this took me 2 hours
@@ -303,9 +311,8 @@ length(which(sig == TRUE))
 #less than 0.05 (indicating significance)
 #In other words, it tells you how many cases out of 100 it reads as significant
 
-#double checking that this adds to 100
+#double checking
 length(which(sig == FALSE))
-#it does
 
 #so, it recognizes a significant difference in means about half of the time
 
@@ -324,7 +331,80 @@ length(which(sig == TRUE))
 #reads a significant differnce about 5% of the time (as we would expect-
 #with a default CI of 95%)
 
-#let's make a function for space efficency and so we can play with SD
+#lets change the CI a few times
+
+#CI= 90%
+p.guiness <- data.frame(NA)
+for (i in 1:100) {
+  c <- rnorm(10, 10)
+  d <- rnorm(10, 10)
+  guiness <- t.test(c, d, conf.level = 0.9 )
+  print(guiness$p.value)
+  p.guiness[i, 1] <- guiness$p.value
+}
+
+sig <- p.guiness <= 0.05
+length(which(sig == TRUE))
+
+#CI= 50%
+p.guiness <- data.frame(NA)
+for (i in 1:100) {
+  c <- rnorm(10, 10)
+  d <- rnorm(10, 10)
+  guiness <- t.test(c, d, conf.level = 0.5 )
+  print(guiness$p.value)
+  p.guiness[i, 1] <- guiness$p.value
+}
+
+sig <- p.guiness <= 0.05
+length(which(sig == TRUE))
+#why is this not changing the read of TRUE?
+
+#let's make a function for space efficency
+rapid <- function(mean1, mean2, CI){
+  p.guiness <- data.frame(NA)
+  for (i in 1:100) {
+    c <- rnorm(10, mean1)
+    d <- rnorm(10, mean2)
+    guiness <- t.test(c, d, conf.level = CI )
+    p.guiness[i, 1] <- guiness$p.value
+  }
+  sig <- p.guiness <= 0.05
+  print(length(which(sig == TRUE)))
+}
+
+#more testing
+rapid(10, 10, 0.5)
+#why is this not changing the read of TRUE?
+
+#testing what changing the CI does
+#change the CI repetedly to test)
+set.seed(1)
+c <- rnorm(10, 10)
+
+set.seed(2)
+d <- rnorm (10, 10)
+t.test(c, d, conf.level = 0.001)
+#Changing the CI does nothing to the p-value when the means are the same
+
+#testing with different means
+rapid(10, 12, 0.8)
+#changing the CI seems to have no effect here either
+
+#expand the above
+set.seed(1)
+c <- rnorm(10, 10)
+
+set.seed(2)
+d <- rnorm (10, 12)
+t.test(c, d, conf.level = 0.1)
+
+#lets look at the t-test formula to understand this (check online)
+#CI's have nothing to do with the formula...
+#I just realized that they only effect how you interpret your p-value
+#I kind of knew that but now I fully understand how arbitrary it is
+
+#lets make another fuction so we can play with SD
 rapid.SD <- function(mean1, mean2, SD1, SD2){
   p.guiness <- data.frame(NA)
   for (i in 1:100) {
@@ -348,19 +428,22 @@ rapid.SD(10, 12, 1, 15)  #8 sigs
 rapid.SD(10, 12, 1, 20)  #11 sigs
 rapid.SD(10, 12, 1, 100)  #5 sigs
 #still very little effect
+#upon looking at the formula again, I would expect SD to have a noticible- 
+#effect on significance only when my sample size is very large
 
-#lets test with a higher n
+#lets test that theory
 rapid.SD(100, 100, 1, 1)  #8 sigs
 rapid.SD(100, 100, 1, 15)  #8 sigs
 rapid.SD(100, 100, 1, 20)  #4 sigs
 rapid.SD(100, 100, 1, 100)  #2 sigs
 rapid.SD(100, 100, 1, 200)  #2 sigs
 #This is still not having a very significant effect
-#this is becasue the larger the SD the harder it is to detect and effect
-#since my means are the same, I already have a very small liklihood of-
-#picking up any significance (and if I did it would be an error)
 
-#lets show that above theory
+#Upon looking at the formula again, I feel like sample size and means are the-
+#only things that will have a large effect on how many sigificant resaults-
+#this thing pumps out
+
+#lets test that
 #function that alows me to choose my sample sizes and means
 rapid.n <- function(n1, n2, mean1, mean2){
   p.guiness <- data.frame(NA)
@@ -375,9 +458,9 @@ rapid.n <- function(n1, n2, mean1, mean2){
 }
 
 #comense experimentation
-rapid.n(10, 10, 10, 10) #3 sig
-rapid.n(100, 100, 10, 10) #6 sig
-#these are false possitives (since the means are the same)
+rapid.n(10, 10, 10, 10) #10 sig
+rapid.n(100, 100, 10, 10) #1 sig
+#these are false possitives
 
 rapid.n(10, 10, 10, 11) #61 sig
 rapid.n(100, 100, 10, 11) #100 sig
@@ -401,8 +484,8 @@ rapid.n(10, 10, 10, 10.5) #26 sig
 rapid.n(100, 100, 10, 10.5) #92 sig
 
 #well that is pretty cool
-#This shows that t-tests can detect smaller effect sizes with confidence when-
-#n is larger
+#This shows that t-tests can detect smaller effect sizes with confidencewhen n-
+#is larger
 
 
 #============================Playing with ANOVA=========================
@@ -424,7 +507,7 @@ names(aov)[2]<-paste("numbers")
 levels(aov$groups)
 
 #visualize data
-bp1 <- boxplot(numbers ~ groups, data = aov)
+boxplot(numbers ~ groups, data = aov)
 
 #compute an ANOVA
 res.aov <- aov(numbers ~ groups, data = aov)
@@ -432,12 +515,72 @@ summary(res.aov)
 
 #let's make a function thats spits out a count of how many resaults out of 100-
 #trials have a significant p-value
+rapid.aov <- function(min1, max1, min2, max2){
+  p.aov <- data.frame(matrix(NA, ncol=1, nrow=30))
+  names(p.aov)[1]<-paste("f-value")
+  groups <- rep(letters[1:3], length= 10)
+  for (i in 1:100) {
+    e<- runif(15, min1, max1)
+    f<- runif(15, min2, max2)
+    aov <- data.frame(groups, c(e, f))
+    names(aov)[2]<-paste("numbers")
+    res.aov <- aov(numbers ~ groups, data = aov)
+    p.aov[i, 1:2] <- summary(res.aov)[[1]][["Pr(>F)"]]
+  }
+  sig <- p.aov <= 0.05
+  print(length(which(sig == TRUE)))
+}
+
+#how many sigs will I get in a one-way ANOVA where half of the values for each-
+#falls between 1 and 50, and half fall within 50 and 100?
+rapid.aov(1, 50, 50, 100) #7 sigs
+
+#lets play with range size
+rapid.aov(1, 500, 1, 500) #7 sigs
+rapid.aov(1, 50, 1, 50) #6 sigs
+rapid.aov(1, 10, 1, 10) #3 sigs
+rapid.aov(1, 5, 1, 5) #3 sigs
+#when range1 (min1-max1) and range 2 (min2-max2) are the same, it reads-
+#significance a mean of about 5 time out of 100 trials (what we would expect-
+#with a 95% CI)
+
+#lets play with different ranges
+rapid.aov(1, 5, 5, 10) #0 sigs
+rapid.aov(1, 5, 10, 15) #0 sigs
+rapid.aov(1, 10, 1, 20) #1 sigs
+rapid.aov(1, 10, 15, 35) #0 sigs
+rapid.aov(400, 500, 500, 600) #0 sigs
+#this is reading as no significant differnce... lets look at the data-
+#tto figure out why
+rapid.aov.box <- function(min1, max1, min2, max2){
+  p.aov <- data.frame(matrix(NA, ncol=2, nrow=30))
+  names(p.aov)[1]<-paste("p-value")
+  groups <- rep(letters[1:3], length= 10)
+  for (i in 1:100) {
+    e<- runif(15, min1, max1)
+    f<- runif(15, min2, max2)
+    aov <- data.frame(groups, c(e, f))
+    names(aov)[2]<-paste("numbers")
+    res.aov <- aov(numbers ~ groups, data = aov)
+    p.aov[i, 1:2] <- summary(res.aov)[[1]][["Pr(>F)"]]
+    #add boxplot
+    boxplot(numbers ~ groups, data = aov)
+  }
+  sig <- p.aov <= 0.05
+  print(length(which(sig == TRUE)))
+}
+rapid.aov.box(400, 500, 500, 600) #5 sigs
+#this is not having an effect because the numbers being pulled from each range-
+#are being spread to each group evenly
+
+#lest change that
 rapid.aov.r <- function(min1, max1, min2, max2, min3, max3){
   p.aov <- data.frame(matrix(NA, ncol=2, nrow=100))
   names(p.aov)[1]<-paste("p-value")
   #now the letters print one at a time, 10 times
   groups <- rep(letters[1:3], each= 10)
   for (i in 1:100) {
+    #add a third range so that I can control the range assigned to each group
     e<- runif(10, min1, max1)
     f<- runif(10, min2, max2)
     g<- runif(10, min3, max3)
@@ -473,6 +616,81 @@ rapid.aov.r(1, 10, 2.5, 11.5, 4, 13) #46 sigs
 #reasonible accuracy when n=10
 
 #let now use normally distributed data
+rapid.aov.norm <- function(n1, n2, n3, mu1, mu2, mu3, sd1, sd2, sd3){
+  p.aov <- data.frame(matrix(NA, ncol=2, nrow=100))
+  names(p.aov)[1]<-paste("p-value")
+  #now the letters print one at a time, 10 times
+  groups <- rep(letters[1:3], each= 10)
+  for (i in 1:100) {
+    #add a third range so that I can control the range assigned to each group
+    e<- rnorm(n1, mu1, sd1)
+    f<- rnorm(n2, mu2, sd2)
+    g<- rnorm(n3, mu3, sd3)
+    aov <- data.frame(groups, c(e, f, g))
+    names(aov)[2]<-paste("numbers")
+    res.aov <- aov(numbers ~ groups, data = aov)
+    p.aov[i, 1:2] <- summary(res.aov)[[1]][["Pr(>F)"]]
+  }
+  sig <- p.aov <= 0.05
+  print(length(which(sig == TRUE)))
+}
+
+#how big does the mean differnce have to be for R to reliably detect it?
+#let's start with n= 10 and SD= 2
+rapid.aov.norm(10, 10, 10, 5, 10, 15, 2, 2, 2) # 100 sigs
+rapid.aov.norm(10, 10, 10, 5, 7, 9, 2, 2, 2) # 99 sigs
+rapid.aov.norm(10, 10, 10, 5, 6, 7, 2, 2, 2) # 47 sigs
+rapid.aov.norm(10, 10, 10, 5, 6.5, 8, 2, 2, 2) # 81 sigs
+#again, it looks like a mean difference of two is the minimum when n= 10
+
+#lets trty with SD=1
+rapid.aov.norm(10, 10, 10, 5, 10, 15, 1, 1, 1) # 100 sigs
+rapid.aov.norm(10, 10, 10, 5, 7, 9, 1, 1, 1) # 100 sigs
+rapid.aov.norm(10, 10, 10, 5, 6, 7, 1, 1, 1) # 99 sigs
+rapid.aov.norm(10, 10, 10, 5, 5.5, 6, 1, 1, 1) # 53 sigs
+#and when SD is one, it can detect a mean difference of 1
+
+#what if we increase sample size?
+rapid.aov.norm(100, 100, 100, 5, 10, 15, 2, 2, 2) # 2 sigs
+rapid.aov.norm(100, 100, 100, 5, 7, 9, 2, 2, 2) # 3 sigs
+rapid.aov.norm(100, 100, 100, 5, 6, 7, 2, 2, 2) # 9 sigs
+rapid.aov.norm(100, 100, 100, 5, 6.5, 8, 2, 2, 2) # 5 sigs
+#hmmmmm
+
+#lets change the difference of meas
+rapid.aov.norm(100, 100, 100, 1, 100, 200, 2, 2, 2) # 0 sigs
+rapid.aov.norm(100, 100, 100, 1, 50, 100, 2, 2, 2) # 0 sigs
+rapid.aov.norm(100, 100, 100, 1, 25, 50, 2, 2, 2) # 0 sigs
+rapid.aov.norm(100, 100, 100, 1, 10, 20, 2, 2, 2) # 0 sigs
+#that is really weird
+
+#lets make the functtion print use the numbers
+rapid.aov.wtf <- function(n1, n2, n3, mu1, mu2, mu3, sd1, sd2, sd3){
+  p.aov <- data.frame(matrix(NA, ncol=2, nrow=100))
+  names(p.aov)[1]<-paste("p-value")
+  groups <- rep(letters[1:3], each= 10)
+  for (i in 1:100) {
+    e<- rnorm(n1, mu1, sd1)
+    f<- rnorm(n2, mu2, sd2)
+    g<- rnorm(n3, mu3, sd3)
+    aov <- data.frame(groups, c(e, f, g))
+    names(aov)[2]<-paste("numbers")
+    res.aov <- aov(numbers ~ groups, data = aov)
+    p.aov[i, 1:2] <- summary(res.aov)[[1]][["Pr(>F)"]]
+    #print the first few generated numbers
+    print((aov))
+    #print p values
+    print(summary(res.aov)[[1]][["Pr(>F)"]])
+  }
+  sig <- p.aov <= 0.05
+  print(length(which(sig == TRUE)))
+}
+
+rapid.aov.wtf(100, 100, 100, 1, 100, 200, 2, 2, 2)
+#okay, so this is happening because I have it set up to print 30 letters but-
+#300 numbers...
+
+#Let's adjust the code
 rapid.aov.ndep <- function(n, mu1, mu2, mu3, sd){
   p.aov <- data.frame(matrix(NA, ncol=2, nrow=100))
   names(p.aov)[1]<-paste("p-value")
@@ -533,6 +751,8 @@ rapid.aov.ndep(1000, 1, 1.01, 1.02, 1) # 8 sigs
 #my phisics roomate and I discussed and we think it is logarithmic, which is-
 #very facinating
 
+#stop
+
 #------------------Try out two way ANOVA--------------------------------------
 
 #make a fake data set that is compaible with two way ANOVA
@@ -546,11 +766,9 @@ sick.test <- data.frame(condition, dose, change.in.level.of.sick)
 boxplot(change.in.level.of.sick ~ dose, data = sick.test)
 boxplot(change.in.level.of.sick ~ condition, data = sick.test)
 
-#start to save figure
-pdf(paste(path.figures))
 #visualize both level groups at one
 cols <- rainbow(3, s = 0.5)
-bp2 <- boxplot(change.in.level.of.sick ~ dose + condition, data = sick.test,
+boxplot(change.in.level.of.sick ~ dose + condition, data = sick.test,
         at = c(1:3, 5:7, 9:11), col = cols,
         names = c(NA, "No Sick", NA, NA, "Sick", NA, NA, "Exrta sick", NA), 
         xaxs = FALSE,
@@ -559,10 +777,6 @@ bp2 <- boxplot(change.in.level.of.sick ~ dose + condition, data = sick.test,
         ylab= "Change in Level of Sick",
         xlab= "Inittial level of Sick")
 legend("topleft", fill = cols, legend = c(1,2,3), horiz = T)
-dev.off()
-#end of save figure
-#NOTE:I cannot figure out how to make this figure save work
-
 #As we might expect given that I used random number generation, there doesn't-
 #look like there is a lot of significant differences going on here
 
@@ -573,9 +787,6 @@ summary(res.aov)
 #how to get two p values out
 p.aov.2 <- data.frame(matrix(NA, ncol=3, nrow=100))
 p.aov.2[i, 1:3] <- summary(res.aov)[[1]][["Pr(>F)"]]
-
-
-#--------------CODE STOPS WORKING PAST THIS POINT----------------------------
 
 #lets make a function
 rapid.2.aov.r <- function(mean, variance){
