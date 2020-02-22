@@ -25,6 +25,8 @@ My new timeline is as follows:
   - Tuesday
     - More factor analysis
 
+### NOTE
+Main CODE is the condenced version of "show your work" CODE. I have not data sets. No other files on this repo are relevent. I cannot figure out how to get the figure save thing to work... as you will see
 
 
 # See previous plan below
