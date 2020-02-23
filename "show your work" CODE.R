@@ -11,6 +11,8 @@
   #f.) repeatedly generate data sets - replicate()
 #3.) Playing with t-tests
 #4.) Playing with ANOVA
+#5.) Calculating effect size
+#6.) Making More Efficent Code
 
 #============================WD and File Storage=========================
 
@@ -1268,6 +1270,7 @@ aov.2w.3w(1, 1.3, 1.5) # 2, 12 sigs
 
 
 
+
 #============================Calculating effect size=========================
 #---------------------------package instalaion-------------------------------
 
@@ -1361,63 +1364,224 @@ anxiety.test <- data.frame(treatment, change.in.anxiety.index)
 #Run cohen's d
 cohen.d(change.in.anxiety.index, treatment)
 #even larger range
+#it is very sensitive to SD
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#run 100 t-test to confirm significance
-rapid.t.c <- function(n, mean1, mean2){
-  p.guiness <- data.frame(NA)
-  for (i in 1:100) {
-    c <- rnorm(n, mean1)
-    d <- rnorm(n, mean2)
-    guiness <- t.test(treatment, c(c, d))
-    p.guiness[i, 1] <- guiness$p.value
-  }
-  sig <- p.guiness <= 0.05
-  print(length(which(sig == TRUE)))
-}
-
-rapid.t.c(5, 5, 10)
-
-
-
-
-
-
-
-#lets simulate some data to use (note that cohen's d can only hande two levels)
-treatment <- rep(c("CBD", "CCT"), each= 5)
-change.in.anxiety.index <- c(rnorm(5, 5), rnorm(5, 10))
+#what if I have large mean difference and large variance (checking if it is an-
+#absolute thing or a proportional thing)
+treatment <- rep(c("Control", "CBD"), each= 50)
+change.in.anxiety.index <- c(rnorm(50, 5, 15), rnorm(50, 6, 15))
 anxiety.test <- data.frame(treatment, change.in.anxiety.index)
+#Run cohen's d
+cohen.d(change.in.anxiety.index, treatment)
+#small range
 
-aov(change.in.anxiety.index ~ treatment, data= anxiety.test)
+#now small mean difference and small variance
+treatment <- rep(c("Control", "CBD"), each= 50)
+change.in.anxiety.index <- c(rnorm(50, 5, 1), rnorm(50, 5.2, 1))
+anxiety.test <- data.frame(treatment, change.in.anxiety.index)
+#Run cohen's d
+cohen.d(change.in.anxiety.index, treatment)
+#small range
+#it seems to be proportional
+
+#What if we up the actual size of the means (small mean dif)
+treatment <- rep(c("Control", "CBD"), each= 50)
+change.in.anxiety.index <- c(rnorm(50, 50, 15), rnorm(50, 51, 15))
+anxiety.test <- data.frame(treatment, change.in.anxiety.index)
+#Run cohen's d
+cohen.d(change.in.anxiety.index, treatment)
+#small range
+
+#What if we up the actual size of the means (big mean dif)
+treatment <- rep(c("Control", "CBD"), each= 50)
+change.in.anxiety.index <- c(rnorm(50, 50, 15), rnorm(50, 60, 15))
+anxiety.test <- data.frame(treatment, change.in.anxiety.index)
+#Run cohen's d
+cohen.d(change.in.anxiety.index, treatment)
+#medium range
 
 
+#what about when SD is different
+treatment <- rep(c("Control", "CBD"), each= 50)
+change.in.anxiety.index <- c(rnorm(50, 5, 10), rnorm(50, 6, 20))
+anxiety.test <- data.frame(treatment, change.in.anxiety.index)
+#Run cohen's d
+cohen.d(change.in.anxiety.index, treatment)
+#small range
+
+#what about when mean difference is large and SD is the same
+treatment <- rep(c("Control", "CBD"), each= 50)
+change.in.anxiety.index <- c(rnorm(50, 5, 15), rnorm(50, 10, 15))
+anxiety.test <- data.frame(treatment, change.in.anxiety.index)
+#Run cohen's d
+cohen.d(change.in.anxiety.index, treatment)
+#medium range
+
+#what about when meand difference is large and SD is different
+treatment <- rep(c("Control", "CBD"), each= 50)
+change.in.anxiety.index <- c(rnorm(50, 5, 10), rnorm(50, 10, 20))
+anxiety.test <- data.frame(treatment, change.in.anxiety.index)
+#Run cohen's d
+cohen.d(change.in.anxiety.index, treatment)
+#small range
+
+#in conclution, n has a proportional effect, mean difference has some effect-
+#and SD has the most significant effect
 
 
+#--------------with hodge's g correction--------------------------------
 
-#First, let's calculate cohen's d for our two way ANOVA
-cls1 <- rnorm(30, 5, 2)
-cls2 <- rnorm(30, 10, 2)
-cls3 <- rnorm(30, 15, 2)
-change.in.level.of.sick <- c(cls1, cls2, cls3)
-sick.test <- data.frame(condition, dose, change.in.level.of.sick)
+#there is an optional correction you can place in this that corrects for-
+#upward bias(default is FALSE)
+#lets turn it on
+
+#large n, large MD, dif SD
+treatment <- rep(c("Control", "CBD"), each= 50)
+change.in.anxiety.index <- c(rnorm(50, 5, 10), rnorm(50, 10, 20))
+anxiety.test <- data.frame(treatment, change.in.anxiety.index)
+#Run cohen's d
+cohen.d(change.in.anxiety.index, treatment, hodges.correction= TRUE)
+#small range (same as without correction)
+
+#large n, large MD, same SD
+treatment <- rep(c("Control", "CBD"), each= 50)
+change.in.anxiety.index <- c(rnorm(50, 5, 15), rnorm(50, 10, 15))
+anxiety.test <- data.frame(treatment, change.in.anxiety.index)
+#Run cohen's d
+cohen.d(change.in.anxiety.index, treatment)
+#small range (smaller than before)
+
+#small n, small MD, dif SD
+treatment <- rep(c("Control", "CBD"), each= 5)
+change.in.anxiety.index <- c(rnorm(5, 5, 1), rnorm(5, 6, 10))
+anxiety.test <- data.frame(treatment, change.in.anxiety.index)
+#Run cohen's d
+cohen.d(change.in.anxiety.index, treatment)
+#large range (same as before)
+
+#it seems that the correction does very little
 
 
+#----------let's just pretend my simulated data is real and unchangible-------
+
+#lets make a few data sets as though they are testing the same thig
+
+#study 1
+treatment <- rep(c("Control", "CBD"), each= 100)
+change.in.anxiety.index <- c(rnorm(100, 5, 2), rnorm(100, 20, 8))
+study1 <- data.frame(treatment, change.in.anxiety.index)
+
+#study 2
+treatment <- rep(c("Control", "CBD"), each= 100)
+change.in.anxiety.index <- c(rnorm(100, 5, 2), rnorm(100, 25, 6))
+study2 <- data.frame(treatment, change.in.anxiety.index)
+
+#study 3
+treatment <- rep(c("Control", "CBD"), each= 100)
+change.in.anxiety.index <- c(rnorm(100, 10, 2), rnorm(100, 15, 2.5))
+study3 <- data.frame(treatment, change.in.anxiety.index)
+
+#study 4
+treatment <- rep(c("Control", "CBD"), each= 100)
+change.in.anxiety.index <- c(rnorm(100, 50, 4), rnorm(100, 51, 4))
+study4 <- data.frame(treatment, change.in.anxiety.index)
+
+#study 5
+treatment <- rep(c("Control", "CBD"), each= 100)
+change.in.anxiety.index <- c(rnorm(100, 20, 2), rnorm(100, 15, 1.5))
+study5 <- data.frame(treatment, change.in.anxiety.index)
+
+#Cohens d for each sudy
+
+#study 1
+cohen.d(study1$change.in.anxiety.index, study1$treatment)
+#d= 2.4
+
+#study 2
+cohen.d(study2$change.in.anxiety.index, study2$treatment)
+#d= 4.3
+
+#study 3
+cohen.d(study3$change.in.anxiety.index, study3$treatment)
+#d= 2.3
+
+#study 4
+cohen.d(study4$change.in.anxiety.index, study4$treatment)
+#d= 0.1
+#the only real difference here is that my mean difference is pretty small
+#since an effect size of 0.8 is considered large (with 0.5 being medium and-
+#and 0.2 being small), this tells me that mean difference I have been feeding-
+#R have been unreasonible given the implicit assumptions of this test's-
+#interpritation
+#by this I mean that if small, medium, and large differences are 0.2, 0.5, and-
+#0.8 respectivly, that just means that in most cases, we will see pretty small
+#mean differences in reality (at least in the social sciences)
+#the "rule of thumb interpretations don't have anything to do with the- 
+#calculation, it is just based on what we are used to seing in reality
+
+#study 5
+cohen.d(study5$change.in.anxiety.index, study5$treatment)
+#d= -3 (I gave the control a higher mean in this one, hense the negetive value)
 
 
+#let's do this again but feed R more expected mean differences
 
 
+#------------more simulated tests with smaller mean difference----------------
 
+#study 1
+treatment <- rep(c("Control", "CBD"), each= 100)
+change.in.anxiety.index <- c(rnorm(100, 5, 2), rnorm(100, 6, 2))
+study1 <- data.frame(treatment, change.in.anxiety.index)
+
+#study 2
+treatment <- rep(c("Control", "CBD"), each= 100)
+change.in.anxiety.index <- c(rnorm(100, 5, 2), rnorm(100, 7, 3))
+study2 <- data.frame(treatment, change.in.anxiety.index)
+
+#study 3
+treatment <- rep(c("Control", "CBD"), each= 100)
+change.in.anxiety.index <- c(rnorm(100, 10, 2), rnorm(100, 12, 2.5))
+study3 <- data.frame(treatment, change.in.anxiety.index)
+
+#study 4
+treatment <- rep(c("Control", "CBD"), each= 100)
+change.in.anxiety.index <- c(rnorm(100, 50, 4), rnorm(100, 51, 4))
+study4 <- data.frame(treatment, change.in.anxiety.index)
+
+#study 5
+treatment <- rep(c("Control", "CBD"), each= 100)
+change.in.anxiety.index <- c(rnorm(100, 20, 2), rnorm(100, 19, 1.5))
+study5 <- data.frame(treatment, change.in.anxiety.index)
+
+#Cohens d for each sudy
+
+#study 1
+cohen.d(study1$change.in.anxiety.index, study1$treatment)
+#d= 0.4
+
+#study 2
+cohen.d(study2$change.in.anxiety.index, study2$treatment)
+#d= 0.8
+
+#study 3
+cohen.d(study3$change.in.anxiety.index, study3$treatment)
+#d= 0.6
+
+#study 4
+cohen.d(study4$change.in.anxiety.index, study4$treatment)
+#d= 0.3
+
+
+#study 5
+cohen.d(study5$change.in.anxiety.index, study5$treatment)
+#d= -0.5 (I gave the control a higher mean in this one, hense the negetive-
+#value)
+
+#as we can see, our d-estimates are more closer to the expeced range (0.0-1.0)-
+#than before. This "rule of thumb" intterpretation is based on the mean-
+#difference being pretty small (evidently)
+
+#in conclution, cohen's d is very unrelible when SD is large, it is very-
+#sensitive to mean difference when SD is not that large, and sample size has-
+#an effect but not that much
