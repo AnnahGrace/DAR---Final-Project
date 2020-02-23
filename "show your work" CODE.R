@@ -1269,8 +1269,8 @@ aov.2w.3w(1, 1.3, 1.5) # 2, 12 sigs
 
 
 #============================Calculating effect size=========================
+#---------------------------package instalaion-------------------------------
 
-#package instalaion
 install.packages("effsize")
 library(effects)
 
@@ -1289,19 +1289,90 @@ cohen.d <- effsize::cohen.d
 #can run a t-test and then merge them to run Cohen's d
 
 #make the data
-CBD <- rnorm(50, 5)
-Control <- rnorm(50, 10)
+CBD <- rnorm(5, 5)
+Control <- rnorm(5, 10)
 
 #run the t-test
 t.test(CBD, CCT)
 
 #create equivilent data set
 treatment <- rep(c("Control", "CBD"), each= 5)
-change.in.anxiety.index <- c(rnorm(5, 500), rnorm(5, 501))
+change.in.anxiety.index <- c(rnorm(5, 5), rnorm(5, 10))
 anxiety.test <- data.frame(treatment, change.in.anxiety.index)
 
 #Run cohen's d
 cohen.d(change.in.anxiety.index, treatment)
+#that tis rediculously large...
+
+#try again with a larger n
+treatment <- rep(c("Control", "CBD"), each= 50)
+change.in.anxiety.index <- c(rnorm(50, 5), rnorm(50, 10))
+anxiety.test <- data.frame(treatment, change.in.anxiety.index)
+#Run cohen's d
+cohen.d(change.in.anxiety.index, treatment)
+#Still unplausibly large
+
+#try again with a smaller mean difference
+treatment <- rep(c("Control", "CBD"), each= 5)
+change.in.anxiety.index <- c(rnorm(5, 5), rnorm(5, 6))
+anxiety.test <- data.frame(treatment, change.in.anxiety.index)
+#Run cohen's d
+cohen.d(change.in.anxiety.index, treatment)
+#that is more reasonible
+
+#since variance is default 1, lets close the mean difference gap a bit more
+treatment <- rep(c("Control", "CBD"), each= 5)
+change.in.anxiety.index <- c(rnorm(5, 5), rnorm(5, 5.5))
+anxiety.test <- data.frame(treatment, change.in.anxiety.index)
+#Run cohen's d
+cohen.d(change.in.anxiety.index, treatment)
+#0.7 seems pretty large still...
+
+#lets close that gap some more
+treatment <- rep(c("Control", "CBD"), each= 5)
+change.in.anxiety.index <- c(rnorm(5, 5), rnorm(5, 5.2))
+anxiety.test <- data.frame(treatment, change.in.anxiety.index)
+#Run cohen's d
+cohen.d(change.in.anxiety.index, treatment)
+#well, if you run this a few times it changes between "large" and "negligible"
+
+#lets just up SD a lot (because it seems to be most sensitive to SD)
+treatment <- rep(c("Control", "CBD"), each= 5)
+change.in.anxiety.index <- c(rnorm(5, 5, 10), rnorm(5, 6, 10))
+anxiety.test <- data.frame(treatment, change.in.anxiety.index)
+#Run cohen's d
+cohen.d(change.in.anxiety.index, treatment)
+#thats more like it
+#so the only thing that has a big effect is SD...
+
+#what if SD is different between groups?
+treatment <- rep(c("Control", "CBD"), each= 5)
+change.in.anxiety.index <- c(rnorm(5, 5, 10), rnorm(5, 6, 5))
+anxiety.test <- data.frame(treatment, change.in.anxiety.index)
+#Run cohen's d
+cohen.d(change.in.anxiety.index, treatment)
+#If you run this multiple times, it seems that having unequal variance makes-
+#it unstable (it depends a lot on the rnorm and therefor is just not robust)
+
+#Lets make SD even less equal
+treatment <- rep(c("Control", "CBD"), each= 5)
+change.in.anxiety.index <- c(rnorm(5, 5, 1), rnorm(5, 6, 10))
+anxiety.test <- data.frame(treatment, change.in.anxiety.index)
+#Run cohen's d
+cohen.d(change.in.anxiety.index, treatment)
+#even larger range
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
