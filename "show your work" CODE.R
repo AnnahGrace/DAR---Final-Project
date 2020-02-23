@@ -1,7 +1,6 @@
 #========================================================================
 #===============================INDEX====================================
 #========================================================================
-
 #1.) Working Directory and File Storage
 #2.) Data Simulation
   #a.) numeric continuous - rnorm()
@@ -12,7 +11,6 @@
   #f.) repeatedly generate data sets - replicate()
 #3.) Playing with t-tests
 #4.) Playing with ANOVA
-
 
 #============================WD and File Storage=========================
 
@@ -36,7 +34,6 @@ path.data.output <- paste(wd,"/",output.folder.names[2],"/", sep= "")
 
 
 #===============================Data Simulation=============================
-
 #--------------rnorm()-----------------
 
 #numeric continous
@@ -231,8 +228,8 @@ str(simlist)
 simlist[[1]]
 
 
-#============================Playing with t-tests=========================
 
+#============================Playing with t-tests=========================
 #------------2 random samples with the same mean and SD-------------
 
 #Create two random samples with the same means and- 
@@ -253,7 +250,7 @@ t.test(a, b)
 #with a p-value of 0.98, we fail to reject the null
 
 
-#------------2 random samples with the same mean and SD-------------
+#------------2 random samples with different mean and SD-------------
 
 #create two random samples with different means and-
 #the same SD
@@ -488,8 +485,8 @@ rapid.n(100, 100, 10, 10.5) #92 sig
 #is larger
 
 
-#============================Playing with ANOVA=========================
 
+#============================Playing with ANOVA=========================
 #------------------Try out one way ANOVA--------------------------------------
 
 #create a data frame with groups a, b, and c where half of the values for each-
@@ -501,7 +498,7 @@ f<- runif(15, 50, 100)
 #null: groups do not have the same mean
 #alt: groups have the same mean
 
-
+#create and check a data frame
 aov <- data.frame(groups, c(e, f))
 names(aov)[2]<-paste("numbers")
 levels(aov$groups)
@@ -788,6 +785,9 @@ summary(res.aov)
 p.aov.2 <- data.frame(matrix(NA, ncol=3, nrow=100))
 p.aov.2[i, 1:3] <- summary(res.aov)[[1]][["Pr(>F)"]]
 
+
+#------------------------------stops working----------------------------------
+
 #lets make a function
 rapid.2.aov.r <- function(mean, variance){
   p.aov.2 <- data.frame(matrix(NA, ncol=3, nrow=100))
@@ -1056,7 +1056,7 @@ rapid.2.aov.x <- function(m1, m2, m3, m4, m5, m6, m7, m8, m9){
                         change.in.level.of.sick9), 
                       condition, dose)
     print(aov[, 1])
-    res.aov <- aov(change.in.level.of.sick ~ dose + condition, data = sick.test)
+    res.aov <- aov(change.in.level.of.sick ~ dose + condition, data = aov)
     p.aov.2[i, 1:3] <- summary(res.aov)[[1]][["Pr(>F)"]]
     print(summary(res.aov)[[1]][["Pr(>F)"]])
   }
@@ -1066,7 +1066,287 @@ rapid.2.aov.x <- function(m1, m2, m3, m4, m5, m6, m7, m8, m9){
   print(length(which(sig2 == TRUE)))
 }
 
-rapid.2.aov.x(10, 20, 30, 40, 50, 60, 70, 80, 90)
+rapid.2.aov.x(10, 10, 10, 10, 10, 10, 10, 10, 100)
 #WTF!!!
+
+#lets try in not the function
+change.in.level.of.sick1 <- rnorm(10, 10, 2)
+change.in.level.of.sick2 <- rnorm(10, 10, 2)
+change.in.level.of.sick3 <- rnorm(10, 10, 2)
+change.in.level.of.sick4 <- rnorm(10, 10, 2)
+change.in.level.of.sick5 <- rnorm(10, 10, 2)
+change.in.level.of.sick6 <- rnorm(10, 10, 2)
+change.in.level.of.sick7 <- rnorm(10, 10, 2)
+change.in.level.of.sick8 <- rnorm(10, 10, 2)
+change.in.level.of.sick9 <- rnorm(10, 100, 2)
+aov <- data.frame(c(change.in.level.of.sick1, change.in.level.of.sick2,
+                    change.in.level.of.sick3, change.in.level.of.sick4,
+                    change.in.level.of.sick5, change.in.level.of.sick6,
+                    change.in.level.of.sick7, change.in.level.of.sick8,
+                    change.in.level.of.sick9), 
+                  condition, dose)
+
+res.aov <- aov(change.in.level.of.sick ~ dose + condition, data = aov)
+summary(res.aov)
+
+change.in.level.of.sick1 <- rnorm(10, 10, 2)
+change.in.level.of.sick2 <- rnorm(10, 20, 2)
+change.in.level.of.sick3 <- rnorm(10, 30, 2)
+change.in.level.of.sick4 <- rnorm(10, 40, 2)
+change.in.level.of.sick5 <- rnorm(10, 50, 2)
+change.in.level.of.sick6 <- rnorm(10, 60, 2)
+change.in.level.of.sick7 <- rnorm(10, 70, 2)
+change.in.level.of.sick8 <- rnorm(10, 80, 2)
+change.in.level.of.sick9 <- rnorm(10, 90, 2)
+aov <- data.frame(c(change.in.level.of.sick1, change.in.level.of.sick2,
+                    change.in.level.of.sick3, change.in.level.of.sick4,
+                    change.in.level.of.sick5, change.in.level.of.sick6,
+                    change.in.level.of.sick7, change.in.level.of.sick8,
+                    change.in.level.of.sick9), 
+                  condition, dose)
+
+res.aov <- aov(change.in.level.of.sick ~ dose + condition, data = aov)
+summary(res.aov)
+
+change.in.level.of.sick1 <- rnorm(10, 10, 2)
+change.in.level.of.sick2 <- rnorm(10, 200, 2)
+change.in.level.of.sick3 <- rnorm(10, 3000, 2)
+change.in.level.of.sick4 <- rnorm(10, 40000, 2)
+change.in.level.of.sick5 <- rnorm(10, 500000, 2)
+change.in.level.of.sick6 <- rnorm(10, 6000000, 2)
+change.in.level.of.sick7 <- rnorm(10, 70000000, 2)
+change.in.level.of.sick8 <- rnorm(10, 800000000, 2)
+change.in.level.of.sick9 <- rnorm(10, 9000000000, 2)
+aov <- data.frame(c(change.in.level.of.sick1, change.in.level.of.sick2,
+                    change.in.level.of.sick3, change.in.level.of.sick4,
+                    change.in.level.of.sick5, change.in.level.of.sick6,
+                    change.in.level.of.sick7, change.in.level.of.sick8,
+                    change.in.level.of.sick9), 
+                  condition, dose)
+
+res.aov <- aov(change.in.level.of.sick ~ dose + condition, data =aov)
+summary(res.aov)
+
+#---------------------------lets simplify-------------------------------
+
+#use oroginal data
+aov(change.in.level.of.sick ~ dose + condition, data =sick.test)
+summary(aov(change.in.level.of.sick ~ dose + condition, data =sick.test))
+
+#change original data
+dose <- rep(rep(c(1, 2, 3), each= 10), length= 90)
+condition <- rep(c("no sick", "sick", "extra sick"), each= 30)
+change.in.level.of.sick <- rnorm(90, 15, 30)
+sick.test <- data.frame(condition, dose, change.in.level.of.sick)
+
+#test
+summary(aov(change.in.level.of.sick ~ dose + condition, data =sick.test))
+#so those are different
+
+change.in.level.of.sick <- rnorm(90, 30, 90)
+sick.test <- data.frame(condition, dose, change.in.level.of.sick)
+summary(aov(change.in.level.of.sick ~ dose + condition, data =sick.test))
+#okay, that progress...
+
+#let's see if I can get a significant read
+cls1 <- rnorm(30, 10, 2)
+cls2 <- rnorm(30, 50, 2)
+cls3 <- rnorm(30, 100, 2)
+change.in.level.of.sick <- c(cls1, cls2, cls3)
+sick.test <- data.frame(condition, dose, change.in.level.of.sick)
+summary(aov(change.in.level.of.sick ~ dose + condition, data =sick.test))
+#yes I can
+
+#let's make a new function
+take.2 <- function(m1, m2, m3){
+  p.aov <- data.frame(matrix(NA, ncol=3, nrow=100))
+  names(p.aov.2)[1]<-paste("p-value dose")
+  names(p.aov.2)[2]<-paste("p-value condition")
+  dose <- rep(rep(c(1, 2, 3), each= 10), length= 90)
+  condition <- rep(c("no sick", "sick", "extra sick"), each= 30)
+  for (i in 1:100) {
+    cls1 <- rnorm(30, m1, 2)
+    cls2 <- rnorm(30, m2, 2)
+    cls3 <- rnorm(30, m3, 2)
+    change.in.level.of.sick <- c(cls1, cls2, cls3)
+    sick.test <- data.frame(condition, dose, change.in.level.of.sick)
+    res.aov <- aov(change.in.level.of.sick ~ dose + condition, data =sick.test)
+    p.aov[i, 1:3] <- summary(res.aov)[[1]][["Pr(>F)"]]
+  }
+  sig <- p.aov[, 1] <= 0.05
+  sig2 <- p.aov[, 2] <= 0.05
+  print(length(which(sig == TRUE)))
+  print(length(which(sig2 == TRUE)))
+}
+
+take.2(10, 50, 100)
+#YAY!!!
+
+#------------------------------working-------------------------------------
+
+#lets go ahead and change the name of that
+aov.2w.3w <- function(m1, m2, m3){
+  p.aov <- data.frame(matrix(NA, ncol=3, nrow=100))
+  names(p.aov.2)[1]<-paste("p-value dose")
+  names(p.aov.2)[2]<-paste("p-value condition")
+  dose <- rep(rep(c(1, 2, 3), each= 10), length= 90)
+  condition <- rep(c("no sick", "sick", "extra sick"), each= 30)
+  for (i in 1:100) {
+    cls1 <- rnorm(30, m1, 2)
+    cls2 <- rnorm(30, m2, 2)
+    cls3 <- rnorm(30, m3, 2)
+    change.in.level.of.sick <- c(cls1, cls2, cls3)
+    sick.test <- data.frame(condition, dose, change.in.level.of.sick)
+    res.aov <- aov(change.in.level.of.sick ~ dose + condition, data =sick.test)
+    p.aov[i, 1:3] <- summary(res.aov)[[1]][["Pr(>F)"]]
+  }
+  sig <- p.aov[, 1] <= 0.05
+  sig2 <- p.aov[, 2] <= 0.05
+  print(length(which(sig == TRUE)))
+  print(length(which(sig2 == TRUE)))
+}
+
+#now lets make a nine way function
+aov.2w.9w <- function(m1, m2, m3, m4, m5, m6, m7, m8, m9){
+  p.aov <- data.frame(matrix(NA, ncol=3, nrow=100))
+  names(p.aov.2)[1]<-paste("p-value dose")
+  names(p.aov.2)[2]<-paste("p-value condition")
+  dose <- rep(rep(c(1, 2, 3), each= 10), length= 90)
+  condition <- rep(c("no sick", "sick", "extra sick"), each= 30)
+  for (i in 1:100) {
+    cls1 <- rnorm(10, m1, 2)
+    cls2 <- rnorm(10, m2, 2)
+    cls3 <- rnorm(10, m3, 2)
+    cls4 <- rnorm(10, m4, 2)
+    cls5 <- rnorm(10, m5, 2)
+    cls6 <- rnorm(10, m6, 2)
+    cls7 <- rnorm(10, m7, 2)
+    cls8 <- rnorm(10, m8, 2)
+    cls9 <- rnorm(10, m9, 2)
+    change.in.level.of.sick <- c(cls1, cls2, cls3, cls4, cls5, cls6,
+                                 cls7, cls8, cls9)
+    sick.test <- data.frame(condition, dose, change.in.level.of.sick)
+    res.aov <- aov(change.in.level.of.sick ~ dose + condition, data =sick.test)
+    p.aov[i, 1:3] <- summary(res.aov)[[1]][["Pr(>F)"]]
+  }
+  sig <- p.aov[, 1] <= 0.05
+  sig2 <- p.aov[, 2] <= 0.05
+  print(length(which(sig == TRUE)))
+  print(length(which(sig2 == TRUE)))
+}
+
+#lets get sigs for just conditions, not dose
+aov.2w.3w(10, 50, 100) # 8, 100 sigs (it prints the dose count first)
+
+#lets get sigs for both
+aov.2w.9w(10, 20, 30, 40, 50, 60, 70, 80, 90) # 100, 100 sigs
+
+#what if there is a difference in dose in one group but no difference at all-
+#in the other two groups (wih differen sizes of mean differnce)?
+aov.2w.9w(10, 20, 30, 20, 20, 20, 20, 20, 20) # 100, 0 sigs (0= condition)
+aov.2w.9w(1, 2, 3, 2, 2, 2, 2, 2, 2) # 23, 7 sigs
+aov.2w.9w(1, 3, 5, 3, 3, 3, 3, 3, 3) # 70, 0 sigs
+aov.2w.9w(1, 4, 7, 4, 4, 4, 4, 4, 4) # 93, 3 sigs
+#so, when n=90m (each does only exists 30 times, and only 10 times per- 
+#condition), can detect a difference in means outcome in dosage down to about- 
+#a mean difference of 3
+
+#what about when does has no effect but condition does?
+aov.2w.3w(10, 20, 30) # 7, 100 sigs (expected)
+aov.2w.3w(1, 5, 10) # 3, 100 sigs (also expected, because SD is 2 and each-
+#condition exisst 30 times in this function)
+aov.2w.3w(1, 4, 7) # 1, 100 sigs
+aov.2w.3w(1, 3, 5) # 3, 100 sigs
+aov.2w.3w(1, 2, 3) # 5, 94 sigs
+#we would expec o gett errors if we go any smaller since our condition n= 30-
+#and we have seen previously that when n=10, we can detect a difference of-
+#means only as large as (or slightly smaller than) the SD
+aov.2w.3w(1, 1.5, 2) # 3, 45 sigs
+aov.2w.3w(1, 1.3, 1.5) # 2, 12 sigs
+#so when sample size (of condittion) is 30 and SD is 2, we can detect a-
+#difference of means as small as 1 reliably (vs. mean dif=2 when n=10 and SD=2)
+
+
+
+#============================Calculating effect size=========================
+
+#package instalaion
+install.packages("effsize")
+library(effects)
+
+#activate/call function
+cohen.d <- effsize::cohen.d
+
+
+#-----------------------------t-tests-------------------------------------
+
+#Cohen's d compairs the mean  between two conditions (two levels) and spists-
+#out a standardized effect size (where 0.2 is considered small, 0.5 is medium-
+#ond 0.8 is large)
+
+#t-test can only look at a difference of means, no levels
+#lets make two seperate vectors (each representing one level) so that we-
+#can run a t-test and then merge them to run Cohen's d
+
+#make the data
+CBD <- rnorm(50, 5)
+Control <- rnorm(50, 10)
+
+#run the t-test
+t.test(CBD, CCT)
+
+#create equivilent data set
+treatment <- rep(c("Control", "CBD"), each= 5)
+change.in.anxiety.index <- c(rnorm(5, 500), rnorm(5, 501))
+anxiety.test <- data.frame(treatment, change.in.anxiety.index)
+
+#Run cohen's d
+cohen.d(change.in.anxiety.index, treatment)
+
+
+
+#run 100 t-test to confirm significance
+rapid.t.c <- function(n, mean1, mean2){
+  p.guiness <- data.frame(NA)
+  for (i in 1:100) {
+    c <- rnorm(n, mean1)
+    d <- rnorm(n, mean2)
+    guiness <- t.test(treatment, c(c, d))
+    p.guiness[i, 1] <- guiness$p.value
+  }
+  sig <- p.guiness <= 0.05
+  print(length(which(sig == TRUE)))
+}
+
+rapid.t.c(5, 5, 10)
+
+
+
+
+
+
+
+#lets simulate some data to use (note that cohen's d can only hande two levels)
+treatment <- rep(c("CBD", "CCT"), each= 5)
+change.in.anxiety.index <- c(rnorm(5, 5), rnorm(5, 10))
+anxiety.test <- data.frame(treatment, change.in.anxiety.index)
+
+aov(change.in.anxiety.index ~ treatment, data= anxiety.test)
+
+
+
+
+
+#First, let's calculate cohen's d for our two way ANOVA
+cls1 <- rnorm(30, 5, 2)
+cls2 <- rnorm(30, 10, 2)
+cls3 <- rnorm(30, 15, 2)
+change.in.level.of.sick <- c(cls1, cls2, cls3)
+sick.test <- data.frame(condition, dose, change.in.level.of.sick)
+
+
+
+
+
 
 
