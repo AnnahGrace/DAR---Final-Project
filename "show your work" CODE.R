@@ -1589,6 +1589,113 @@ cohen.d(study5$change.in.anxiety.index, study5$treatment)
 #sensitive to mean difference when SD is not that large, and sample size has-
 #an effect but not that much
 
+#=============================Forest Plotts====================================
+#-------------------------------instal package---------------------------------
+
+install.packages("forestplot")
+library(forestplot)
+
+#---------------------------createt a list-------------------------------------
+
+#study 1
+treatment <- rep(c("Control", "CBD"), each= 100)
+change.in.anxiety.index <- c(rnorm(100, 5, 2), rnorm(100, 6, 2))
+study1 <- data.frame(treatment, change.in.anxiety.index)
+
+#study 2
+treatment <- rep(c("Control", "CBD"), each= 100)
+change.in.anxiety.index <- c(rnorm(100, 5, 2), rnorm(100, 7, 3))
+study2 <- data.frame(treatment, change.in.anxiety.index)
+
+#study 3
+treatment <- rep(c("Control", "CBD"), each= 100)
+change.in.anxiety.index <- c(rnorm(100, 10, 2), rnorm(100, 12, 2.5))
+study3 <- data.frame(treatment, change.in.anxiety.index)
+
+#study 4
+treatment <- rep(c("Control", "CBD"), each= 100)
+change.in.anxiety.index <- c(rnorm(100, 50, 4), rnorm(100, 51, 4))
+study4 <- data.frame(treatment, change.in.anxiety.index)
+
+#study 5
+treatment <- rep(c("Control", "CBD"), each= 100)
+change.in.anxiety.index <- c(rnorm(100, 20, 2), rnorm(100, 19, 1.5))
+study5 <- data.frame(treatment, change.in.anxiety.index)
+
+
+#Cohens d for each sudy
+
+#study 1
+cd1 <- cohen.d(study1$change.in.anxiety.index, study1$treatment)
+cd1e <- data.frame(cd1$estimate)
+cd1e[, 2] <- cd1$conf.int[1]
+cd1e[, 3] <- cd1$conf.int[2]
+names(cd1e)[1] <- "d.est"
+names(cd1e)[2] <- "lower"
+names(cd1e)[3] <- "upper"
+
+#study 2
+cd2 <- cohen.d(study2$change.in.anxiety.index, study2$treatment)
+cd2e <- cd2$estimate
+cd2e[, 2] <- cd2$conf.int[1]
+cd2e[, 3] <- cd2$conf.int[2]
+names(cd2e)[1] <- "d.est"
+names(cd2e)[2] <- "lower"
+names(cd2e)[3] <- "upper"
+
+#study 3
+cd3 <- cohen.d(study3$change.in.anxiety.index, study3$treatment)
+cd3e <- cd3$estimate
+cd3e[, 2] <- cd3$conf.int[1]
+cd3e[, 3] <- cd3$conf.int[2]
+names(cd3e)[1] <- "d.est"
+names(cd3e)[2] <- "lower"
+names(cd3e)[3] <- "upper"
+
+#study 4
+cd4 <- cohen.d(study4$change.in.anxiety.index, study4$treatment)
+cd4e <- cd4$estimate
+
+#study 5
+cd5 <- cohen.d(study5$change.in.anxiety.index, study5$treatment)
+cd5e <- cd5$estimate
+
+fp <- rbind(cd1e, cd2e, cd3e, cd4e, cd5e)
+
+mean(fp)
+
+forestplot(fp, mean(fp), 0.01, 1.0)
+
+
+
+
+
+
+
+
+
+
+#----------------------------testing----------------------------------
+row_names <- list(list("test = 1", expression(test >= 2))) 
+  test_data <- data.frame(coef=c(1.59, 1.24),
+    low=c(1.4, 0.78), high=c(1.8, 1.55))
+forestplot(row_names, test_data$coef,
+           test_data$low, test_data$high,
+           zero = 1,
+           cex = 2,
+           lineheight = "auto", xlab = "Lab axis txt")
+
+
+
+
+
+
+
+
+
+
+#stop
+
 #==========================Making my code more elegent=========================
 #--------------------------------t-tests--------------------------------------
 #--------------------------------ANOVA----------------------------------------
