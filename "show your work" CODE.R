@@ -12,7 +12,8 @@
 #3.) Playing with t-tests
 #4.) Playing with ANOVA
 #5.) Calculating effect size
-#6.) Making More Efficent Code
+#6.) Forest Plots
+#7.) Making More Efficent Code
   #a.) t-tests
   #b.) ANOVA
   #c.) effect size
@@ -1589,13 +1590,14 @@ cohen.d(study5$change.in.anxiety.index, study5$treatment)
 #sensitive to mean difference when SD is not that large, and sample size has-
 #an effect but not that much
 
-#=============================Forest Plotts====================================
+
+#=============================Forest Plots====================================
 #-------------------------------instal package---------------------------------
 
 install.packages("forestplot")
 library(forestplot)
 
-#---------------------------createt a list-------------------------------------
+#---------------------------createt a matrix-------------------------------------
 
 #study 1
 treatment <- rep(c("Control", "CBD"), each= 100)
@@ -1623,48 +1625,47 @@ change.in.anxiety.index <- c(rnorm(100, 20, 2), rnorm(100, 19, 1.5))
 study5 <- data.frame(treatment, change.in.anxiety.index)
 
 
-#Cohens d for each sudy
+#Cohens d for each sudy 
+#place every d-estimate, upper, and lower limits in a data frame
 
 #study 1
 cd1 <- cohen.d(study1$change.in.anxiety.index, study1$treatment)
-cd1e <- data.frame(cd1$estimate)
-cd1e[, 2] <- cd1$conf.int[1]
-cd1e[, 3] <- cd1$conf.int[2]
-names(cd1e)[1] <- "d.est"
-names(cd1e)[2] <- "lower"
-names(cd1e)[3] <- "upper"
+cde <- data.frame(cd1$estimate)
+cde[, 2] <- cd1$conf.int[1]
+cde[, 3] <- cd1$conf.int[2]
+names(cde)[1] <- "d.est"
+names(cde)[2] <- "lower"
+names(cde)[3] <- "upper"
 
 #study 2
 cd2 <- cohen.d(study2$change.in.anxiety.index, study2$treatment)
-cd2e <- cd2$estimate
-cd2e[, 2] <- cd2$conf.int[1]
-cd2e[, 3] <- cd2$conf.int[2]
-names(cd2e)[1] <- "d.est"
-names(cd2e)[2] <- "lower"
-names(cd2e)[3] <- "upper"
+cde[2, 1] <- cd2$estimate
+cde[2, 2] <- cd2$conf.int[1]
+cde[2, 3] <- cd2$conf.int[2]
 
 #study 3
 cd3 <- cohen.d(study3$change.in.anxiety.index, study3$treatment)
-cd3e <- cd3$estimate
-cd3e[, 2] <- cd3$conf.int[1]
-cd3e[, 3] <- cd3$conf.int[2]
-names(cd3e)[1] <- "d.est"
-names(cd3e)[2] <- "lower"
-names(cd3e)[3] <- "upper"
+cde[3, 1] <- cd3$estimate
+cde[3, 2] <- cd3$conf.int[1]
+cde[3, 3] <- cd3$conf.int[2]
 
 #study 4
 cd4 <- cohen.d(study4$change.in.anxiety.index, study4$treatment)
-cd4e <- cd4$estimate
+cde[4, 1] <- cd4$estimate
+cde[4, 2] <- cd3$conf.int[1]
+cde[4, 3] <- cd3$conf.int[2]
 
 #study 5
 cd5 <- cohen.d(study5$change.in.anxiety.index, study5$treatment)
-cd5e <- cd5$estimate
+cde[5, 1] <- cd5$estimate
+cde[5, 2] <- cd3$conf.int[1]
+cde[5, 3] <- cd3$conf.int[2]
 
-fp <- rbind(cd1e, cd2e, cd3e, cd4e, cd5e)
+#---------------------------try to make a forest plot--------------------------
 
-mean(fp)
-
-forestplot(fp, mean(fp), 0.01, 1.0)
+#attempt #1
+forestplot(cde, cde[, 1], cde[, 2], cde[, 3])
+#...well... that certainly is a thing
 
 
 
