@@ -13,6 +13,9 @@
 #4.) Playing with ANOVA
 #5.) Calculating effect size
 #6.) Making More Efficent Code
+  #a.) t-tests
+  #b.) ANOVA
+  #c.) effect size
 
 #============================WD and File Storage=========================
 
@@ -1585,3 +1588,8 @@ cohen.d(study5$change.in.anxiety.index, study5$treatment)
 #in conclution, cohen's d is very unrelible when SD is large, it is very-
 #sensitive to mean difference when SD is not that large, and sample size has-
 #an effect but not that much
+
+#==========================Making my code more elegent=========================
+#--------------------------------t-tests--------------------------------------
+#--------------------------------ANOVA----------------------------------------
+#------------------------------effect size------------------------------------
