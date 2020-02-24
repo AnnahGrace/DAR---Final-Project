@@ -4,7 +4,7 @@ I cannot go through everything that I have listed below unless I do a very gener
   - ~~t-tests~~
   - ~~ANOVA~~
   - ~~Effect size (focus on Hedge's g and Cohen's d)~~
-  - Forest plots
+  - ~~Forest plots~~
   - *adding in "making code more efficent" because I have 1600 lines of code right now and that is what I've been donig all                    day/night...*
   - If I have time left over, I will jump into factor analysis (because this looks really cool)
   
