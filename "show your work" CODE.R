@@ -1,7 +1,7 @@
 #========================================================================
 #===============================INDEX====================================
 #========================================================================
-#1.) Working Directory and File Storage
+#1.) Working Directory, File Storage, and Package Instalation
 #2.) Data Simulation
   #a.) numeric continuous - rnorm()
   #b.) numeric continuous - runif()
@@ -17,8 +17,10 @@
   #a.) t-tests
   #b.) ANOVA
   #c.) effect size
+  #d.) forest plots
 
-#============================WD and File Storage=========================
+#=====================WD, File Storage, and Package Instalattion================
+#------------------------------WD and File Storage-------------------------
 
 #get working directory
 wd <- getwd()
@@ -37,6 +39,18 @@ path.figures <- paste(wd,"/",output.folder.names[1],"/", sep= "")
 
 #path to data output folder
 path.data.output <- paste(wd,"/",output.folder.names[2],"/", sep= "")
+
+
+#----------------------------Package Insalation--------------------------------
+
+install.packages("effsize")
+library(effects)
+#activate/call function
+cohen.d <- effsize::cohen.d
+
+install.packages("forestplot")
+library(forestplot)
+
 
 
 #===============================Data Simulation=============================
@@ -1276,15 +1290,6 @@ aov.2w.3w(1, 1.3, 1.5) # 2, 12 sigs
 
 
 #============================Calculating effect size=========================
-#---------------------------package instalaion-------------------------------
-
-install.packages("effsize")
-library(effects)
-
-#activate/call function
-cohen.d <- effsize::cohen.d
-
-
 #-----------------------------t-tests-------------------------------------
 
 #Cohen's d compairs the mean  between two conditions (two levels) and spists-
@@ -1592,11 +1597,6 @@ cohen.d(study5$change.in.anxiety.index, study5$treatment)
 
 
 #=============================Forest Plots====================================
-#-------------------------------instal package---------------------------------
-
-install.packages("forestplot")
-library(forestplot)
-
 #---------------------------createt a matrix-------------------------------------
 
 #study 1
@@ -1616,12 +1616,12 @@ study3 <- data.frame(treatment, change.in.anxiety.index)
 
 #study 4
 treatment <- rep(c("Control", "CBD"), each= 100)
-change.in.anxiety.index <- c(rnorm(100, 50, 4), rnorm(100, 51, 4))
+change.in.anxiety.index <- c(rnorm(100, 50, 4), rnorm(100, 52, 4))
 study4 <- data.frame(treatment, change.in.anxiety.index)
 
 #study 5
 treatment <- rep(c("Control", "CBD"), each= 100)
-change.in.anxiety.index <- c(rnorm(100, 20, 2), rnorm(100, 19, 1.5))
+change.in.anxiety.index <- c(rnorm(100, 19, 2), rnorm(100, 20, 1.5))
 study5 <- data.frame(treatment, change.in.anxiety.index)
 
 
@@ -1667,37 +1667,74 @@ cde[5, 3] <- cd3$conf.int[2]
 forestplot(cde, cde[, 1], cde[, 2], cde[, 3])
 #...well... that certainly is a thing
 
+#attempt #2
+#row names
+cde[1, 4] <- "Study 1"
+cde[2, 4] <- "Study 2"
+cde[3, 4] <- "Study 3"
+cde[4, 4] <- "Study 4"
+cde[5, 4] <- "Study 5"
+
+forestplot(cde[, 4], cde[, 1], cde[, 2], cde[, 3])
+#getting bettter
+#I am going to just do this one step at a time
+
+#attempt #3
+#add in an "overal" row
+cde[6, 1] <- mean(cde$d.est)
+cde[6, 2] <- mean(cde$lower[1:5])
+cde[6, 3] <- mean(cde$upper[1:5])
+cde[6, 4] <- "Overal"
+
+forestplot(cde[, 4], cde[, 1], cde[, 2], cde[, 3],
+           manin= "Hypohetical effects of CBT treatment for Anxiety",
+           xlab= "Effect Size",
+           ci.vertices = TRUE)
 
 
+#testing with thing from online
+forestplot(cde[, 4], cde[, 1], cde[, 2], cde[, 3],
+           is.summary=c(TRUE,TRUE,rep(FALSE,8),TRUE),
+           clip=c(0.1,2.5), 
+           xlog=TRUE, 
+           col=fpColors(box="royalblue",line="darkblue", summary="royalblue"))
+#WTF just happened
 
+#adjustments
+forestplot(cde[, 4], cde[, 1], cde[, 2], cde[, 3],
+           is.summary= c(rep(FALSE, 5), TRUE),
+           col= fpColors(box= "black",line= "black", summary= "royalblue"),
+           ci.vertices = TRUE,
+           zero= mean(cde$d.est))
 
+#attempt 4
+forestplot(cde[, 4], cde[, 1], cde[, 2], cde[, 3],
+           is.summary= c(rep(FALSE, 5), TRUE),
+           col= fpColors(box= "black",line= "black", summary= "royalblue"),
+           ci.vertices = TRUE,
+           grid = structure(mean(cde$d.est), 
+                            gp = gpar(lty = 2, col = "firebrick")),
+           xlab= "Effect Size (est. d)",
+           clip= c(0, 1))
 
+#attempt 5
+xticks <- seq(from= 0, to= 1, by= 0.1)
 
+fp <- forestplot(cde[, 4], cde[, 1], cde[, 2], cde[, 3],
+           is.summary= c(rep(FALSE, 5), TRUE),
+           col= fpColors(box= "black",line= "black", summary= "royalblue"),
+           ci.vertices = TRUE,
+           grid = structure(mean(cde$d.est), 
+                            gp = gpar(lty = 2, col = "firebrick")),
+           xlab= "Effect Size (est. d)",
+          xticks= xticks,
+          clip= 1)
+#Thats pretty good
+#I like it (even though the effect sizes are unreailistic)
 
-
-
-#----------------------------testing----------------------------------
-row_names <- list(list("test = 1", expression(test >= 2))) 
-  test_data <- data.frame(coef=c(1.59, 1.24),
-    low=c(1.4, 0.78), high=c(1.8, 1.55))
-forestplot(row_names, test_data$coef,
-           test_data$low, test_data$high,
-           zero = 1,
-           cex = 2,
-           lineheight = "auto", xlab = "Lab axis txt")
-
-
-
-
-
-
-
-
-
-
-#stop
 
 #==========================Making my code more elegent=========================
 #--------------------------------t-tests--------------------------------------
 #--------------------------------ANOVA----------------------------------------
 #------------------------------effect size------------------------------------
+#------------------------------forest plots------------------------------------
