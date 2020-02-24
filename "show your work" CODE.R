@@ -26,10 +26,10 @@
 wd <- getwd()
 wd
 
-# folders for storing data outputs and figures
-# store names of the folders in an object
+#folders for storing data outputs and figures
+#store names of the folders in an object
 output.folder.names <- c("figures", "data.output")
-# and make the folders if they don't exist yet. 
+#make the folders (if they don't exist yet) 
 for(i in 1:length(output.folder.names)) 
   if(file.exists(output.folder.names[i])== FALSE) 
     dir.create(output.folder.names[i])
