@@ -53,6 +53,7 @@ library(forestplot)
 
 
 
+
 #===============================Data Simulation=============================
 #--------------rnorm()-----------------
 
@@ -506,6 +507,7 @@ rapid.n(100, 100, 10, 10.5) #92 sig
 
 
 
+
 #============================Playing with ANOVA=========================
 #------------------Try out one way ANOVA--------------------------------------
 
@@ -524,7 +526,10 @@ names(aov)[2]<-paste("numbers")
 levels(aov$groups)
 
 #visualize data
+pdf(paste(path.figures, paste("Not So Good BoxPlot"), sep = ""),
+    width = 5, height = 5)
 boxplot(numbers ~ groups, data = aov)
+dev.off()
 
 #compute an ANOVA
 res.aov <- aov(numbers ~ groups, data = aov)
@@ -784,8 +789,10 @@ boxplot(change.in.level.of.sick ~ dose, data = sick.test)
 boxplot(change.in.level.of.sick ~ condition, data = sick.test)
 
 #visualize both level groups at one
+pdf(paste(path.figures, paste("Good BoxPlot"), sep = ""),
+    width = 5, height = 5)
 cols <- rainbow(3, s = 0.5)
-boxplot(change.in.level.of.sick ~ dose + condition, data = sick.test,
+BoxPlot <- boxplot(change.in.level.of.sick ~ dose + condition, data = sick.test,
         at = c(1:3, 5:7, 9:11), col = cols,
         names = c(NA, "No Sick", NA, NA, "Sick", NA, NA, "Exrta sick", NA), 
         xaxs = FALSE,
@@ -794,6 +801,7 @@ boxplot(change.in.level.of.sick ~ dose + condition, data = sick.test,
         ylab= "Change in Level of Sick",
         xlab= "Inittial level of Sick")
 legend("topleft", fill = cols, legend = c(1,2,3), horiz = T)
+dev.off()
 #As we might expect given that I used random number generation, there doesn't-
 #look like there is a lot of significant differences going on here
 
@@ -1720,7 +1728,8 @@ forestplot(cde[, 4], cde[, 1], cde[, 2], cde[, 3],
 #attempt 5
 xticks <- seq(from= 0, to= 1, by= 0.1)
 
-fp <- forestplot(cde[, 4], cde[, 1], cde[, 2], cde[, 3],
+pdf(paste(path.figures, paste("Forest Plot"), sep = ""))
+forestplot(cde[, 4], cde[, 1], cde[, 2], cde[, 3],
            is.summary= c(rep(FALSE, 5), TRUE),
            col= fpColors(box= "black",line= "black", summary= "royalblue"),
            ci.vertices = TRUE,
@@ -1729,8 +1738,11 @@ fp <- forestplot(cde[, 4], cde[, 1], cde[, 2], cde[, 3],
            xlab= "Effect Size (est. d)",
           xticks= xticks,
           clip= 1)
+dev.off()
 #Thats pretty good
 #I like it (even though the effect sizes are unreailistic)
+
+
 
 
 #==========================Making my code more elegent=========================
