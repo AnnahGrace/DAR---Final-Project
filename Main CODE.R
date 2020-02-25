@@ -39,7 +39,7 @@ path.data.output <- paste(wd,"/",output.folder.names[2],"/", sep= "")
 
 #effsize for calculating effect size
 install.packages("effsize")
-library(effects)
+library(effsize)
 #activate/call function for cohen's d
 cohen.d <- effsize::cohen.d
 
@@ -356,6 +356,19 @@ rapid.t.mu.SD <- function(mean1, mean2, SD1, SD2){
   print(length(which(sig == TRUE)))
 }
 
+#lets make another one that adjusts SD and n
+rapid.t.n.mu.SD <- function(n1, n2, mean1, mean2, SD1, SD2){
+  p.guiness <- data.frame(NA)
+  for (i in 1:100) {
+    c <- rnorm(n1, mean1, SD1)
+    d <- rnorm(n2, mean2, SD2)
+    guiness <- t.test(c, d)
+    p.guiness[i, 1] <- guiness$p.value
+  }
+  sig <- p.guiness <= 0.05
+  print(length(which(sig == TRUE)))
+}
+
 #lets play with SD when means are equal
 rapid.t.mu.SD(10, 10, 1, 15) #5 sigs
 rapid.t.mu.SD(10, 10, 1, 20)#8 sigs
@@ -371,12 +384,14 @@ rapid.t.mu.SD(10, 12, 1, 100) #6 sigs
 #have a noticible effect on significance only when my sample size is very large
 
 #lets test that theory
-rapid.t.mu.SD(100, 100, 1, 1) #8 sigs
-rapid.t.mu.SD(100, 100, 1, 15) #8 sigs
-rapid.t.mu.SD(100, 100, 1, 20) #4 sigs
-rapid.t.mu.SD(100, 100, 1, 100) #2 sigs
-rapid.t.mu.SD(100, 100, 1, 200) #2 sigs
-#This is still not having much of an effect
+rapid.t.n.mu.SD(100, 100, 10, 12, 1, 1) #100 sigs
+rapid.t.n.mu.SD(100, 100, 10, 12, 1, 15) #31 sigs
+rapid.t.n.mu.SD(100, 100, 10, 12, 1, 20) #22 sigs
+rapid.t.n.mu.SD(100, 100, 10, 12, 1, 100) #3 sigs
+rapid.t.n.mu.SD(100, 100, 10, 12, 1, 200) #6 sigs
+#So, as sd increases the mean difference must also increase for R to detect a-
+#significant difference. It seems that the size of SD reletive to the size of-
+#the mean difference is much more important that the absolute value of the SD
 
 #Upon looking at the formula again, I feel like sample size and means are the-
 #only things that will have a large effect on how many sigificant resaults-
@@ -412,45 +427,34 @@ rapid.n(100, 100, 10, 12) #100 sig
 
 
 #what does my sig count look like as I get closer to a mean difference of 0-
-#(check when n= 10 and when n= 100)
+#(check when n= 10, when n= 100 and when n= 1000)
 
 rapid.t.n.mu(10, 10, 10, 10.6) #25 sig
 rapid.t.n.mu(100, 100, 10, 10.6) #100 sig
+rapid.t.n.mu(1000, 100, 10, 10.6) #100 sig
 
 rapid.t.n.mu(10, 10, 10, 10.5) #26 sig
 rapid.t.n.mu(100, 100, 10, 10.5) #92 sig
+rapid.t.n.mu(1000, 100, 10, 10.5) #100 sig
 
 rapid.t.n.mu(10, 10, 10, 10.4) #14 sig
 rapid.t.n.mu(100, 100, 10, 10.4) #74 sig
+rapid.t.n.mu(1000, 100, 10, 10.4) #96 sig
 
 rapid.t.n.mu(10, 10, 10, 10.3) #12 sig
 rapid.t.n.mu(100, 100, 10, 10.3) #57 sig
+rapid.t.n.mu(1000, 100, 10, 10.3) #83 sig
 
 rapid.t.n.mu(10, 10, 10, 10.2) #9 sig
 rapid.t.n.mu(100, 100, 10, 10.2) #28 sig
+rapid.t.n.mu(1000, 100, 10, 10.2) #42 sig
 
 rapid.t.n.mu(10, 10, 10, 10.1) #9 sig
 rapid.t.n.mu(100, 100, 10, 10.1) #11 sig
+rapid.t.n.mu(1000, 100, 10, 10.1) #13 sig
 
 #This shows that t-tests can detect smaller effect sizes with confidencewhen n-
 #is larger
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #============================Playing with ANOVA=========================
@@ -473,15 +477,16 @@ names(aov)[2]<-paste("numbers")
 levels(aov$groups)
 
 #save data as a CSV
-write.csv(aov, paste(path.data.output,'ANOVA-OneWay',sep = ''))
+write.csv(aov, paste(path.data.output,'ANOVA-OneWay.csv',sep = ''))
 
 #visualize and save the data
 
 #start saving
-pdf(paste(path.figures, paste("ANOVA-BoxPlot-OneWay"), sep = ""),
+pdf(paste(path.figures, paste('ANOVA-BoxPlot-OneWay.pdf'), sep = ""),
     width = 5, height = 5)
 #construct boxplot
-boxplot(numbers ~ groups, data = aov)
+boxplot(numbers ~ groups, data = aov,
+        main= "One Way ANOVA BoxPlot")
 #stop saving
 dev.off()
 
@@ -625,14 +630,14 @@ change.in.level.of.sick <- rnorm(90, 0, 2)
 sick.test <- data.frame(condition, dose, change.in.level.of.sick)
 
 #save data as a CSV
-write.csv(sick.test, paste(path.data.output,'ANOVA-TwoWay',sep = ''))
+write.csv(sick.test, paste(path.data.output,'ANOVA-TwoWay.csv',sep = ''))
 
 #visualize data
 boxplot(change.in.level.of.sick ~ dose, data = sick.test)
 boxplot(change.in.level.of.sick ~ condition, data = sick.test)
 
 #visualize both level groups at one
-pdf(paste(path.figures, paste("ANOVA-BoxPlot-TwoWay"), sep = ""),
+pdf(paste(path.figures, paste('ANOVA-BoxPlot-TwoWay.pdf'), sep = ""),
     width = 5, height = 5)
 cols <- rainbow(3, s = 0.5)
 BoxPlot <- boxplot(change.in.level.of.sick ~ dose + condition, data = sick.test,
@@ -1095,11 +1100,11 @@ change.in.anxiety.index <- c(rnorm(100, 19, 2), rnorm(100, 20, 1.5))
 study5 <- data.frame(treatment, change.in.anxiety.index)
 
 #save data for each study
-write.csv(study1, paste(path.data.output,'FP-Study1',sep = ''))
-write.csv(study2, paste(path.data.output,'FP-Study2',sep = ''))
-write.csv(study3, paste(path.data.output,'FP-Study3',sep = ''))
-write.csv(study4, paste(path.data.output,'FP-Study4',sep = ''))
-write.csv(study5, paste(path.data.output,'FP-Study5',sep = ''))
+write.csv(study1, paste(path.data.output,'FP-Study1.csv',sep = ''))
+write.csv(study2, paste(path.data.output,'FP-Study2.csv',sep = ''))
+write.csv(study3, paste(path.data.output,'FP-Study3.csv',sep = ''))
+write.csv(study4, paste(path.data.output,'FP-Study4.csv',sep = ''))
+write.csv(study5, paste(path.data.output,'FP-Study5.csv',sep = ''))
 
 
 #Cohens d for each sudy 
@@ -1157,12 +1162,15 @@ cde[6, 2] <- mean(cde$lower[1:5])
 cde[6, 3] <- mean(cde$upper[1:5])
 cde[6, 4] <- "Overal"
 
+#save csv
+write.table(cde, paste(path.data.output,'FP-meta.csv',sep = ''))
+
 #create forest plot
 
 #save range of x-axis ticks in a vector (for ease of use in the function)
 xticks <- seq(from= 0, to= 1, by= 0.1)
 #start saving as PDF
-pdf(paste(path.figures, paste("FP-Forest Plot"), sep = ""))
+pdf(paste(path.figures, paste("FP-Forest Plot.pdf"), sep = ""))
 #forest plot where the 4th column of the df sets the study names, the 1st-
 #column lists the effect sizes (in cohen's d), the 2nd column lists the lower-
 #limits of each ES, and the 3rd lists with upper limits of each ES
