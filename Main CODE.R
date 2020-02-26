@@ -48,6 +48,7 @@ install.packages("forestplot")
 library(forestplot)
 
 
+
 #===============================Data Simulation=============================
 #--------------rnorm()-----------------
 
@@ -264,6 +265,7 @@ simlist[[1]]
 
 
 
+
 #============================Playing with t-tests=========================
 #------------2 random samples with the same mean and SD-------------
 
@@ -455,6 +457,7 @@ rapid.t.n.mu(1000, 100, 10, 10.1) #13 sig
 
 #This shows that t-tests can detect smaller effect sizes with confidencewhen n-
 #is larger
+
 
 
 #============================Playing with ANOVA=========================
@@ -755,6 +758,7 @@ aov.2w.3w(1, 1.3, 1.5) # 2, 12 sigs
 
 
 
+
 #============================Calculating effect size=========================
 #-----------------------------t-tests-------------------------------------
 
@@ -767,15 +771,15 @@ aov.2w.3w(1, 1.3, 1.5) # 2, 12 sigs
 #can run a t-test and then merge them to run Cohen's d
 
 #make the data
-CBD <- rnorm(5, 5)
+CBT <- rnorm(5, 5)
 Control <- rnorm(5, 10)
 
 #run the t-test
-t.test(CBD, Control)
+t.test(CBT, Control)
 #p-value= 0.0003
 
 #create equivilent data set for EF calculation
-treatment <- rep(c("Control", "CBD"), each= 5)
+treatment <- rep(c("Control", "CBT"), each= 5)
 change.in.anxiety.index <- c(rnorm(5, 5), rnorm(5, 10))
 anxiety.test <- data.frame(treatment, change.in.anxiety.index)
 
@@ -784,7 +788,7 @@ cohen.d(change.in.anxiety.index, treatment)
 #that is rediculously large... lets try to figure out what is causing that
 
 #try again with a larger n
-treatment <- rep(c("Control", "CBD"), each= 50)
+treatment <- rep(c("Control", "CBT"), each= 50)
 change.in.anxiety.index <- c(rnorm(50, 5), rnorm(50, 10))
 anxiety.test <- data.frame(treatment, change.in.anxiety.index)
 #Run cohen's d
@@ -792,7 +796,7 @@ cohen.d(change.in.anxiety.index, treatment)
 #Still implausibly large
 
 #try again with a smaller mean difference
-treatment <- rep(c("Control", "CBD"), each= 5)
+treatment <- rep(c("Control", "CBT"), each= 5)
 change.in.anxiety.index <- c(rnorm(5, 5), rnorm(5, 6))
 anxiety.test <- data.frame(treatment, change.in.anxiety.index)
 #Run cohen's d
@@ -800,7 +804,7 @@ cohen.d(change.in.anxiety.index, treatment)
 #that is more reasonible
 
 #since variance is default 1, lets close the mean difference gap a bit more
-treatment <- rep(c("Control", "CBD"), each= 5)
+treatment <- rep(c("Control", "CBT"), each= 5)
 change.in.anxiety.index <- c(rnorm(5, 5), rnorm(5, 5.5))
 anxiety.test <- data.frame(treatment, change.in.anxiety.index)
 #Run cohen's d
@@ -808,7 +812,7 @@ cohen.d(change.in.anxiety.index, treatment)
 #0.7 seems pretty large still...
 
 #lets close that gap some more
-treatment <- rep(c("Control", "CBD"), each= 5)
+treatment <- rep(c("Control", "CBT"), each= 5)
 change.in.anxiety.index <- c(rnorm(5, 5), rnorm(5, 5.2))
 anxiety.test <- data.frame(treatment, change.in.anxiety.index)
 #Run cohen's d
@@ -818,7 +822,7 @@ cohen.d(change.in.anxiety.index, treatment)
 #normal generations (rnorm)
 
 #lets just up SD a lot (because cohen's d seems to be most sensitive to SD)
-treatment <- rep(c("Control", "CBD"), each= 5)
+treatment <- rep(c("Control", "CBT"), each= 5)
 change.in.anxiety.index <- c(rnorm(5, 5, 10), rnorm(5, 6, 10))
 anxiety.test <- data.frame(treatment, change.in.anxiety.index)
 #Run cohen's d
@@ -827,7 +831,7 @@ cohen.d(change.in.anxiety.index, treatment)
 #so the only thing that has a big effect is SD...
 
 #what if SD is different between groups?
-treatment <- rep(c("Control", "CBD"), each= 5)
+treatment <- rep(c("Control", "CBT"), each= 5)
 change.in.anxiety.index <- c(rnorm(5, 5, 10), rnorm(5, 6, 5))
 anxiety.test <- data.frame(treatment, change.in.anxiety.index)
 #Run cohen's d
@@ -837,7 +841,7 @@ cohen.d(change.in.anxiety.index, treatment)
 #this is giving me d estimates that range from large to negligible
 
 #Lets make SD even less equal
-treatment <- rep(c("Control", "CBD"), each= 5)
+treatment <- rep(c("Control", "CBT"), each= 5)
 change.in.anxiety.index <- c(rnorm(5, 5, 1), rnorm(5, 6, 10))
 anxiety.test <- data.frame(treatment, change.in.anxiety.index)
 #Run cohen's d
@@ -847,7 +851,7 @@ cohen.d(change.in.anxiety.index, treatment)
 
 #what if I have large mean difference and large variance (checking if it is an-
 #absolute thing or a proportional thing)
-treatment <- rep(c("Control", "CBD"), each= 50)
+treatment <- rep(c("Control", "CBT"), each= 50)
 change.in.anxiety.index <- c(rnorm(50, 5, 15), rnorm(50, 6, 15))
 anxiety.test <- data.frame(treatment, change.in.anxiety.index)
 #Run cohen's d
@@ -855,7 +859,7 @@ cohen.d(change.in.anxiety.index, treatment)
 #small range (negligible to small reads)
 
 #now small mean difference and small variance
-treatment <- rep(c("Control", "CBD"), each= 50)
+treatment <- rep(c("Control", "CBT"), each= 50)
 change.in.anxiety.index <- c(rnorm(50, 5, 1), rnorm(50, 5.2, 1))
 anxiety.test <- data.frame(treatment, change.in.anxiety.index)
 #Run cohen's d
@@ -864,7 +868,7 @@ cohen.d(change.in.anxiety.index, treatment)
 #it seems to be proportional
 
 #What if we up the actual size of the means (small mean dif)
-treatment <- rep(c("Control", "CBD"), each= 50)
+treatment <- rep(c("Control", "CBT"), each= 50)
 change.in.anxiety.index <- c(rnorm(50, 50, 15), rnorm(50, 51, 15))
 anxiety.test <- data.frame(treatment, change.in.anxiety.index)
 #Run cohen's d
@@ -872,7 +876,7 @@ cohen.d(change.in.anxiety.index, treatment)
 #small range (negligible to small reads)
 
 #What if we up the actual size of the means (big mean dif)
-treatment <- rep(c("Control", "CBD"), each= 50)
+treatment <- rep(c("Control", "CBT"), each= 50)
 change.in.anxiety.index <- c(rnorm(50, 50, 15), rnorm(50, 60, 15))
 anxiety.test <- data.frame(treatment, change.in.anxiety.index)
 #Run cohen's d
@@ -881,7 +885,7 @@ cohen.d(change.in.anxiety.index, treatment)
 
 
 #what about when SD is different
-treatment <- rep(c("Control", "CBD"), each= 50)
+treatment <- rep(c("Control", "CBT"), each= 50)
 change.in.anxiety.index <- c(rnorm(50, 5, 10), rnorm(50, 6, 20))
 anxiety.test <- data.frame(treatment, change.in.anxiety.index)
 #Run cohen's d
@@ -889,7 +893,7 @@ cohen.d(change.in.anxiety.index, treatment)
 #small range (negligible to small reads)
 
 #what about when mean difference is large and SD is the same
-treatment <- rep(c("Control", "CBD"), each= 50)
+treatment <- rep(c("Control", "CBT"), each= 50)
 change.in.anxiety.index <- c(rnorm(50, 5, 15), rnorm(50, 10, 15))
 anxiety.test <- data.frame(treatment, change.in.anxiety.index)
 #Run cohen's d
@@ -897,7 +901,7 @@ cohen.d(change.in.anxiety.index, treatment)
 #medium range (negligible to small reads)
 
 #what about when meand difference is large and SD is different
-treatment <- rep(c("Control", "CBD"), each= 50)
+treatment <- rep(c("Control", "CBT"), each= 50)
 change.in.anxiety.index <- c(rnorm(50, 5, 10), rnorm(50, 10, 20))
 anxiety.test <- data.frame(treatment, change.in.anxiety.index)
 #Run cohen's d
@@ -919,7 +923,7 @@ cohen.d(change.in.anxiety.index, treatment)
 #lets turn it on for some t-test-esq daa
 
 #large n, large MD, dif SD
-treatment <- rep(c("Control", "CBD"), each= 50)
+treatment <- rep(c("Control", "CBT"), each= 50)
 change.in.anxiety.index <- c(rnorm(50, 5, 10), rnorm(50, 10, 20))
 anxiety.test <- data.frame(treatment, change.in.anxiety.index)
 #Run cohen's d
@@ -927,7 +931,7 @@ cohen.d(change.in.anxiety.index, treatment, hodges.correction= TRUE)
 #small range (same as without correction)
 
 #large n, large MD, same SD
-treatment <- rep(c("Control", "CBD"), each= 50)
+treatment <- rep(c("Control", "CBT"), each= 50)
 change.in.anxiety.index <- c(rnorm(50, 5, 15), rnorm(50, 10, 15))
 anxiety.test <- data.frame(treatment, change.in.anxiety.index)
 #Run cohen's d
@@ -935,7 +939,7 @@ cohen.d(change.in.anxiety.index, treatment)
 #small range (smaller than before)
 
 #small n, small MD, dif SD
-treatment <- rep(c("Control", "CBD"), each= 5)
+treatment <- rep(c("Control", "CBT"), each= 5)
 change.in.anxiety.index <- c(rnorm(5, 5, 1), rnorm(5, 6, 10))
 anxiety.test <- data.frame(treatment, change.in.anxiety.index)
 #Run cohen's d
@@ -950,27 +954,27 @@ cohen.d(change.in.anxiety.index, treatment)
 #lets make a few data sets as though they are testing the same thig
 
 #study 1
-treatment <- rep(c("Control", "CBD"), each= 100)
+treatment <- rep(c("Control", "CBT"), each= 100)
 change.in.anxiety.index <- c(rnorm(100, 5, 2), rnorm(100, 20, 8))
 study1 <- data.frame(treatment, change.in.anxiety.index)
 
 #study 2
-treatment <- rep(c("Control", "CBD"), each= 100)
+treatment <- rep(c("Control", "CBT"), each= 100)
 change.in.anxiety.index <- c(rnorm(100, 5, 2), rnorm(100, 25, 6))
 study2 <- data.frame(treatment, change.in.anxiety.index)
 
 #study 3
-treatment <- rep(c("Control", "CBD"), each= 100)
+treatment <- rep(c("Control", "CBT"), each= 100)
 change.in.anxiety.index <- c(rnorm(100, 10, 2), rnorm(100, 15, 2.5))
 study3 <- data.frame(treatment, change.in.anxiety.index)
 
 #study 4
-treatment <- rep(c("Control", "CBD"), each= 100)
+treatment <- rep(c("Control", "CBT"), each= 100)
 change.in.anxiety.index <- c(rnorm(100, 50, 4), rnorm(100, 51, 4))
 study4 <- data.frame(treatment, change.in.anxiety.index)
 
 #study 5
-treatment <- rep(c("Control", "CBD"), each= 100)
+treatment <- rep(c("Control", "CBT"), each= 100)
 change.in.anxiety.index <- c(rnorm(100, 20, 2), rnorm(100, 15, 1.5))
 study5 <- data.frame(treatment, change.in.anxiety.index)
 
@@ -1013,27 +1017,27 @@ cohen.d(study5$change.in.anxiety.index, study5$treatment)
 #------------more simulated tests with smaller mean difference----------------
 
 #study 1
-treatment <- rep(c("Control", "CBD"), each= 100)
+treatment <- rep(c("Control", "CBT"), each= 100)
 change.in.anxiety.index <- c(rnorm(100, 5, 2), rnorm(100, 6, 2))
 study1 <- data.frame(treatment, change.in.anxiety.index)
 
 #study 2
-treatment <- rep(c("Control", "CBD"), each= 100)
+treatment <- rep(c("Control", "CBT"), each= 100)
 change.in.anxiety.index <- c(rnorm(100, 5, 2), rnorm(100, 7, 3))
 study2 <- data.frame(treatment, change.in.anxiety.index)
 
 #study 3
-treatment <- rep(c("Control", "CBD"), each= 100)
+treatment <- rep(c("Control", "CBT"), each= 100)
 change.in.anxiety.index <- c(rnorm(100, 10, 2), rnorm(100, 12, 2.5))
 study3 <- data.frame(treatment, change.in.anxiety.index)
 
 #study 4
-treatment <- rep(c("Control", "CBD"), each= 100)
+treatment <- rep(c("Control", "CBT"), each= 100)
 change.in.anxiety.index <- c(rnorm(100, 50, 4), rnorm(100, 51, 4))
 study4 <- data.frame(treatment, change.in.anxiety.index)
 
 #study 5
-treatment <- rep(c("Control", "CBD"), each= 100)
+treatment <- rep(c("Control", "CBT"), each= 100)
 change.in.anxiety.index <- c(rnorm(100, 20, 2), rnorm(100, 19, 1.5))
 study5 <- data.frame(treatment, change.in.anxiety.index)
 
@@ -1071,31 +1075,32 @@ cohen.d(study5$change.in.anxiety.index, study5$treatment)
 #also, the hodge's g correction has a very small effect (at leastt here)
 
 
+
 #=============================Forest Plots====================================
 #---------------------------createt a matrix-------------------------------------
 
 #study 1
-treatment <- rep(c("Control", "CBD"), each= 100)
+treatment <- rep(c("Control", "CBT"), each= 100)
 change.in.anxiety.index <- c(rnorm(100, 5, 2), rnorm(100, 6, 2))
 study1 <- data.frame(treatment, change.in.anxiety.index)
 
 #study 2
-treatment <- rep(c("Control", "CBD"), each= 100)
+treatment <- rep(c("Control", "CBT"), each= 100)
 change.in.anxiety.index <- c(rnorm(100, 5, 2), rnorm(100, 7, 3))
 study2 <- data.frame(treatment, change.in.anxiety.index)
 
 #study 3
-treatment <- rep(c("Control", "CBD"), each= 100)
+treatment <- rep(c("Control", "CBT"), each= 100)
 change.in.anxiety.index <- c(rnorm(100, 10, 2), rnorm(100, 12, 2.5))
 study3 <- data.frame(treatment, change.in.anxiety.index)
 
 #study 4
-treatment <- rep(c("Control", "CBD"), each= 100)
+treatment <- rep(c("Control", "CBT"), each= 100)
 change.in.anxiety.index <- c(rnorm(100, 50, 4), rnorm(100, 52, 4))
 study4 <- data.frame(treatment, change.in.anxiety.index)
 
 #study 5
-treatment <- rep(c("Control", "CBD"), each= 100)
+treatment <- rep(c("Control", "CBT"), each= 100)
 change.in.anxiety.index <- c(rnorm(100, 19, 2), rnorm(100, 20, 1.5))
 study5 <- data.frame(treatment, change.in.anxiety.index)
 
@@ -1163,7 +1168,7 @@ cde[6, 3] <- mean(cde$upper[1:5])
 cde[6, 4] <- "Overal"
 
 #save csv
-write.table(cde, paste(path.data.output,'FP-meta.csv',sep = ''))
+write.csv(cde, paste(path.data.output,'FP-meta.csv',sep = ''))
 
 #create forest plot
 
