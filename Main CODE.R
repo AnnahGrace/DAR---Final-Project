@@ -49,6 +49,7 @@ library(forestplot)
 
 
 
+
 #===============================Data Simulation=============================
 #--------------rnorm()-----------------
 
@@ -158,7 +159,7 @@ LETTERS[3:17]
 #note that if your range is larger than 26, you get NA's after 26
 
 #repete each element of a vector n times with rep()
-rep(thing to repete, n)
+#rep(thing to repete, n)
 #there are several calsses of "n" which dictate how rep() replicates
 #when the second input's class is unspecified, it defaults to "times" 
 rep(1:10, 2)
@@ -249,20 +250,6 @@ str(simlist)
 
 #here is the fist sim
 simlist[[1]]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -422,8 +409,8 @@ rapid.t.n.mu(100, 100, 10, 10) #6 sig
 rapid.t.n.mu(10, 10, 10, 11) #58 sig
 rapid.t.n.mu(100, 100, 10, 11) #100 sig
 #it can detect a smaller mean difference with larger sample size
-rapid.n(10, 10, 10, 12) #99 sig
-rapid.n(100, 100, 10, 12) #100 sig
+rapid.t.n.mu(10, 10, 10, 12) #99 sig
+rapid.t.n.mu(100, 100, 10, 12) #100 sig
 #but when SD= 1 and the mean difference is 2, sample size does not have much-
 #of an effect
 
@@ -457,6 +444,7 @@ rapid.t.n.mu(1000, 100, 10, 10.1) #13 sig
 
 #This shows that t-tests can detect smaller effect sizes with confidencewhen n-
 #is larger
+
 
 
 
@@ -754,6 +742,7 @@ aov.2w.3w(1, 1.5, 2) # 3, 45 sigs
 aov.2w.3w(1, 1.3, 1.5) # 2, 12 sigs
 #so when sample size (of condittion) is 30 and SD is 2, we can detect a-
 #difference of means as small as 1 reliably (vs. mean dif=2 when n=10 and SD=2)
+
 
 
 
@@ -1073,6 +1062,7 @@ cohen.d(study5$change.in.anxiety.index, study5$treatment)
 #sensitive to mean difference when SD is not that large, and sample size has-
 #an effect but not that much
 #also, the hodge's g correction has a very small effect (at leastt here)
+
 
 
 
